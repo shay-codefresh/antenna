@@ -182,7 +182,7 @@ function phase2(filename, dot1, dot2, callback) {
 module.exports.sortarray = sortarray;
 //delete it
 module.exports.myread = myread;
-module.exports.checkrange = checkrange;
+//module.exports.checkrange = checkrange;
 module.exports.phase1 = phase1;
 module.exports.phase2 = phase2;
 module.exports.distance = distance;
