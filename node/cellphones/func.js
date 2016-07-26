@@ -134,126 +134,17 @@ function phase2(filename, dot1, dot2, callback) {
     });
 }
 
-
-function phase3333(filename, dot1, dot2, callback) {
-//take take the dot
-    var x1 = dot1.x;
-    var y1 = dot1.y;
-    var x2 = dot2.x;
-    var y2 = dot2.y;
-//read the file
-    fs.readFile(__dirname + '/' + filename, function (err, result) {
-        console.log(__dirname + '/' + filename)
-        if (err) {
-//check if the path is wrong
-            var error = new Error(err);
-            callback(error);
-            return;
-        }
-        else {
-            //ann array with id and distance
-            var antennas = JSON.parse(result).antennas;
-            //add distances from dot 1 and dot 2
-            for (var i = 0; i < antennas.length; i++) {
-                antennas[i].distance1 = distance(antennas[i].position.x, antennas[i].position.y, x1, y1);
-                antennas[i].distance2 = distance(antennas[i].position.x, antennas[i].position.y, x2, y2);
-                //in case its the same antenna
-                if (antennas[i].distance1 <= antennas[i].transmissionLength && antennas[i].distance2 <= antennas[i].transmissionLength) {
-                    //one antenna reach for both cellphones
-                    callback(null, [antennas[i].id]);
-                    return;
-                }
-            }
-
-
-            var minroute = [];
-            for (var i = 0; i < antennas.length; i++) {
-                //*if its not nothing
-                var thisroute = "";
-                if (antennas[i].distance1 <= antennas[i].transmissionLength) {
-                    var temp = route(antennas, x2, y2, i, 0, thisroute);
-                    //*check if temp is smaller than temp
-
-                    if (temp != "") {
-                        if (temp.indexOf(',') > -1) {
-                            temp = temp.split(',');
-                        }
-                        else {
-                            temp = [temp];
-                        }
-                        //initialize min route
-                        if (minroute.length == 0) {
-                            minroute = temp;
-                        }
-                        //new smallest route
-                        if (temp.length < minroute.length) {
-                            minroute = temp;
-                        }
-                    }
-
-                }
-
-            }
-            callback(null, minroute);
-        }
-    });
-}
-
-
-//array,dot2,index,routelength, **returns the path
-function route(array, x, y, i, j, routes) {
-//check if its the same one V
-//check if you are inside the array limits V
-    var result = "";
-    if (routes.indexOf(array[i].id) > -1) {
-        routes = "";
-        return "";
-    }
-
-    if (array[i].transmissionLength >= distance(x, y, array[i].position.x, array[i].position.y)) {
-        routes += array[i].id;
-        return result + array[i].id;
-    }
-    if (i != j) {
-        if (array[i].transmissionLength + array[j].transmissionLength >= distance(array[i].position.x, array[i].position.y, array[j].position.x, array[j].position.y)) {
-
-            //if resultcontains does not contains j
-            if (routes.indexOf(array[j].id) <= -1) {
-                //I need to check if it might return backwards
-                var temp = route(array, x, y, j, 0, routes);
-                if (temp != "") {
-                    routes += "," + array[j].id + temp;
-                    return result + "," + array[j].id + "," + temp;
-                }
-
-
-            }
-        }
-    }
-    if (j + 1 < array.length) {
-        if (routes.indexOf(array[j + 1].id) > -1)
-            return "";
-        var temp = route(array, x, y, i, j + 1, routes);
-        if (temp != "") {
-            routes += "," + array[j + 1].id + temp;
-            return result + "," + array[j + 1].id + "," + temp;
-        }
-    }
-    return "";
-}
-
 var minpath = Number.MAX_VALUE;
 var minpathvar = [];
 //to convert to ids array
 
 function path(dot1, dot2, array, result) {
     if (dot1.transmissionLength == undefined && dot2.transmissionLength == undefined) {
-    //if (dot1.isNull("transmissionLength")  && !dot2.isNull("transmissionLength")) {
         //case both dots in range of the same antenna
-        var newtemp= inrange(dot1, array);
-        var rangevar = inrange(dot2,newtemp);
 
-        //var rangevar = inrange(dot2, inrange(dot1, array));
+        var rangevar = inrange(dot2,inrange(dot1, array));
+
+
         if (rangevar != 0) {
             if (rangevar.length < minpath) {
                 minpathvar = [rangevar[0]];
@@ -277,17 +168,15 @@ function path(dot1, dot2, array, result) {
     if (rangevar.length != 0) {
         for (var i = 0; i < rangevar.length; i++) {
             //console.log(result);
+            var notrepeat=_.reject(array,function (el){return el.id==rangevar[i].id});
             //if its the first var
-            var temp=_.reject(array,function (el){return el.id==rangevar[i].id});
             if(result==[]){
-                path(rangevar[i], dot2, temp,[rangevar[i]])
+                path(rangevar[i], dot2, notrepeat,[rangevar[i]])
             }
             else {
                 result.push(rangevar[i]);
             }
-
-         //   path(rangevar[i], dot2, array.splice(i, 1), temp);
-            path(rangevar[i], dot2, temp,result)
+            path(rangevar[i], dot2, notrepeat,result)
         }
     }
     return;
@@ -297,10 +186,9 @@ function inrange(dot, array) {
     var results = [];
     //if its a dot
     if (dot.transmissionLength == undefined) {
-   // if (dot.isNull("transmissionLength")) {
         for (var i = 0; i < array.length; i++) {
-            var tempy=distance(array[i].position.x, array[i].position.y, dot.x, dot.y);
-            if (array[i].transmissionLength >= tempy) {
+
+            if (array[i].transmissionLength >= distance(array[i].position.x, array[i].position.y, dot.x, dot.y)) {
                 results.push(array[i]);
             }
         }
@@ -319,7 +207,6 @@ function inrange(dot, array) {
 
 
 module.exports.path = path;
-module.exports.route = route;
 module.exports.phase1 = phase1;
 module.exports.phase2 = phase2;
 module.exports.phase3 = phase3;
