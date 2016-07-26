@@ -4,9 +4,6 @@
 
 
 var _ = require('lodash-node');
-
-
-
 var tools = require('./func');
 /*
 function step1() {
@@ -32,17 +29,24 @@ function step1() {
 }
 */
 
-function stepone() {
+var x1=1;
+var y1=1;
+var x2=2;
+var y2=2;
 
-    var x1=1;
-    var y1=2;
-    var x2=61;
-    var y2=61;
+function stepone() {
+    /*
+     var x1=1;
+     var y1=1;
+     var x2=2;
+     var y2=2;
+     */
     tools.phase1("antenna.json",{x:x1,y:y1},{x:x2,y:y2}, function (err, res) {
         if(err){
             return err;
         }
         else {
+            console.log("step 1 started");
             console.log(res);
             return res;
         }
@@ -52,17 +56,19 @@ function stepone() {
 stepone();
 
 function steptwo(){
-
-    var x1=1;
-    var y1=2;
-    var x2=61;
-    var y2=61;
+    /*
+     var x1=1;
+     var y1=1;
+     var x2=2;
+     var y2=2;
+     */
 
     tools.phase2("antenna.json",{x:x1,y:y1},{x:x2,y:y2}, function (err, res) {
         if(err){
-            return err;
+            console.log(err);
         }
         else {
+            console.log("step 2 started");
             console.log(res);
             return res;
         }
@@ -70,3 +76,28 @@ function steptwo(){
 }
 
 steptwo();
+
+
+function stepthree(){
+    /*
+     var x1=1;
+     var y1=1;
+     var x2=2;
+     var y2=2;
+     */
+
+    tools.phase3("antenna.json",{x:x1,y:y1},{x:x2,y:y2}, function (err, res) {
+        if(err){
+            console.log(err);
+        }
+        else {
+            //var yyy={x:x1,y:y1};
+            //console.log(yyy.isNull("hey"))
+            console.log("step 3 started");
+            console.log(res);
+            return res;
+        }
+    })
+}
+
+stepthree();
