@@ -1,0 +1,213 @@
+{
+  "scenarios": [
+    {
+       "antennas": [
+        {
+          "id": "1",
+          "position": {
+            "x": 1,
+            "y": 1
+          },
+          "transmissionLength": 50
+        },
+        {
+          "id": "2",
+          "position": {
+            "x": 1,
+            "y": 100
+          },
+          "transmissionLength": 50
+        },
+        {
+          "id": "3",
+          "position": {
+            "x": 1000,
+            "y": 1000
+          },
+          "transmissionLength": 50
+        }
+      ],
+      "cellPhone1": {
+        "x": 100,
+        "y": 50
+      },
+      "cellPhone2": {
+        "x": 100,
+        "y": 60
+      },
+      "results": {
+        "phase1": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "phase2": [
+          "error"
+        ],
+        "phase3": [
+          "error"
+        ],
+        "phase4": [
+          "error"
+        ]
+      }
+    },
+    {
+      "antennas": [
+        {
+          "id": "1",
+          "position": {
+            "x": 1,
+            "y": 1
+          },
+          "transmissionLength": 200
+        },
+        {
+          "id": "2",
+          "position": {
+            "x": 1,
+            "y": 100
+          },
+          "transmissionLength": 200
+        },
+        {
+          "id": "3",
+          "position": {
+            "x": 100,
+            "y": 1
+          },
+          "transmissionLength": 200
+        },
+        {
+          "id": "4",
+          "position": {
+            "x": 100,
+            "y": 100
+          },
+          "transmissionLength": 200
+        }
+      ],
+      "cellPhone1": {
+        "x": 50,
+        "y": 50
+      },
+      "cellPhone2": {
+        "x": 50,
+        "y": 50
+      },
+      "results": {
+        "phase1": [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ],
+          [
+            "4"
+          ]
+        ],
+        "phase2": [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ],
+          [
+            "4"
+          ]
+        ],
+        "phase3": [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ],
+          [
+            "4"
+          ]
+        ],
+        "phase4": [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ],
+          [
+            "4"
+          ]
+        ]
+      }
+    },
+    {
+      "antennas": [
+        {
+          "id": "1",
+          "position": {
+            "x": 75,
+            "y": 25
+          },
+          "transmissionLength": 150
+        },
+        {
+          "id": "2",
+          "position": {
+            "x": 25,
+            "y": 75
+          },
+          "transmissionLength": 150
+        }
+      ],
+      "cellPhone1": {
+        "x": 2,
+        "y": 100
+      },
+      "cellPhone2": {
+        "x": 100,
+        "y": 2
+      },
+      "results": {
+        "phase1": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "phase2": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "phase3": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "phase4": [
+          [
+            "1",
+            "2"
+          ]
+        ]
+      }
+    }
+  ]
+}

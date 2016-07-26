@@ -23,7 +23,7 @@ function phase1(filename, dot1, dot2, callback) {
     var y2 = dot2.y;
 
     fs.readFile(__dirname + '/' + filename, function (err, result) {
-        console.log(__dirname + '/' + filename)
+        //console.log(__dirname + '/' + filename)
         if (err) {
 //check if the path is wrong
             var error = new Error(err);
@@ -71,7 +71,7 @@ function phase2(filename, dot1, dot2, callback) {
     var y2 = dot2.y;
 
     fs.readFile(__dirname + '/' + filename, function (err, result) {
-        console.log(__dirname + '/' + filename)
+        //console.log(__dirname + '/' + filename)
         if (err) {
 //check if the path is wrong
             var error = new Error(err);
@@ -206,12 +206,6 @@ function inrange(dot, array) {
 }
 
 
-module.exports.path = path;
-module.exports.phase1 = phase1;
-module.exports.phase2 = phase2;
-module.exports.phase3 = phase3;
-module.exports.distance = distance;
-
 
 function phase3(filename, dot1, dot2, callback) {
 //take take the dot
@@ -221,7 +215,7 @@ function phase3(filename, dot1, dot2, callback) {
     var y2 = dot2.y;
 //read the file
     fs.readFile(__dirname + '/' + filename, function (err, result) {
-        console.log(__dirname + '/' + filename)
+        //console.log(__dirname + '/' + filename)
         if (err) {
 //check if the path is wrong
             var error = new Error(err);
@@ -233,6 +227,12 @@ function phase3(filename, dot1, dot2, callback) {
             var antennas = JSON.parse(result).antennas;
             var history = [];
             path(dot1, dot2, antennas, history);
+
+            if(minpathvar.length==0){
+                var error = new Error("no antennas in range");
+                callback(error);
+                return;
+            }
             var answer=[];
             for(var i=0;i<minpathvar.length;i++){
                 answer.push(minpathvar[i].id);
@@ -244,3 +244,49 @@ function phase3(filename, dot1, dot2, callback) {
 
 
 ///things i need to do : order,check the undefind thing,check splica and correct it !!!!!, understand what the story about push
+//max value.how to run on minpath. ugly length
+
+module.exports.path = path;
+module.exports.phase1 = phase1;
+module.exports.phase2 = phase2;
+module.exports.phase3 = phase3;
+module.exports.phase4 = phase4;
+module.exports.distance = distance;
+
+
+
+
+function phase4(filename, dot1, dot2, callback) {
+//take take the dot
+    var x1 = dot1.x;
+    var y1 = dot1.y;
+    var x2 = dot2.x;
+    var y2 = dot2.y;
+//read the file
+    fs.readFile(__dirname + '/' + filename, function (err, result) {
+        //console.log(__dirname + '/' + filename)
+        if (err) {
+//check if the path is wrong
+            var error = new Error(err);
+            callback(error);
+            return;
+        }
+        else {
+            //ann array with id and distance
+            var antennas = JSON.parse(result).antennas;
+            var history = [];
+            path(dot1, dot2, antennas, history);
+
+            if(minpathvar.length==0){
+                var error = new Error("no antennas in range");
+                callback(error);
+                return;
+            }
+            var answer=[];
+            for(var i=0;i<minpathvar.length;i++){
+                answer.push(minpathvar[i].id);
+            }
+            callback(null, answer);
+        }
+    });
+}
