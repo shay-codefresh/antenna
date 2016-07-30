@@ -6,55 +6,10 @@ var _ = require('lodash-node');
 // function(opts){
 //     return math.sqrt(math.pow(opts.x2 - opts.x1, 2) + math.pow(opts.y2 - opts.y1, 2));
 // }
-function distance12(x1, y1, x2, y2) {
-
-    if(x1<0||x2<0||y1<0||y2<0){
-        return new error("negative values")
-    }
-<<<<<<< HEAD
-    else{
-=======
-        else{
->>>>>>> bf3698145c08e91b141c143399de53761e8c9a9a
-        return math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2));
-    }
-    //TODO tr is not minus. if it is send error -check if the code can handle the error
-
+function distance(x1, y1, x2, y2) {
+    //TODO tr is not minus. if it is send error
+    return math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2));
 }
-
-function distance(dot1, dot2) {
-    var x1;
-    var y1;
-    var x2;
-    var y2;
-    if (dot1.position == undefined) {
-        x1 = dot1.x;
-        y1 = dot1.y;
-    }
-    else {
-        x1 = dot1.position.x;
-        y1 = dot1.position.y;
-    }
-    if (dot2.position == undefined) {
-        x2 = dot2.x;
-        y2 = dot2.y;
-    }
-    else {
-        x2 = dot2.position.x;
-        y2 = dot2.position.y;
-    }
-    if (x1 < 0 || x2 < 0 || y1 < 0 || y2 < 0) {
-        return new error("negative values")
-    }
-    else {
-
-        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-    }
-    //TODO tr is not minus. if it is send error -check if the code can handle the error
-
-}
-
-
 //sort the array according to the variable whichcell- the closest to the cellphone
 //sort the array according to the largest transsmition length
 function sortarray(array) {
@@ -65,6 +20,12 @@ function sortarray(array) {
 }
 
 function phase1(filename, point1, point2, callback) {
+//step 1 started
+    var x1 = point1.x;
+    var y1 = point1.y;
+    var x2 = point2.x;
+    var y2 = point2.y;
+
     fs.readFile(__dirname + '/' + filename, function (err, result) {
         //console.log(__dirname + '/' + filename)
 
@@ -92,8 +53,8 @@ function phase1(filename, point1, point2, callback) {
                 //     y1: antennas[i].position.y,
                 //
                 // }
-                antennas[i].distance1 = distance(antennas[i],point1);
-                antennas[i].distance2 = distance(antennas[i],point2);
+                antennas[i].distance1 = distance(antennas[i].position.x, antennas[i].position.y, x1, y1);
+                antennas[i].distance2 = distance(antennas[i].position.x, antennas[i].position.y, x2, y2);
                 if (antennas[i].distance1 < antenna1[1]) {
                     antenna1[0] = antennas[i].id;
                     antenna1[1] = antennas[i].distance1;
@@ -118,6 +79,12 @@ function phase1(filename, point1, point2, callback) {
 }
 
 function phase2(filename, point1, point2, callback) {
+//take the point
+    var x1 = point1.x;
+    var y1 = point1.y;
+    var x2 = point2.x;
+    var y2 = point2.y;
+
     fs.readFile(__dirname + '/' + filename, function (err, result) {
         //console.log(__dirname + '/' + filename)
         if (err) {
@@ -134,8 +101,8 @@ function phase2(filename, point1, point2, callback) {
             //relevants antennas for cellphone 2
             var antennas2 = [];
             for (var i = 0; i < antennas.length; i++) {
-                antennas[i].distance1 = distance(antennas[i],point1);
-                antennas[i].distance2 = distance(antennas[i],point2);
+                antennas[i].distance1 = distance(antennas[i].position.x, antennas[i].position.y, x1, y1);
+                antennas[i].distance2 = distance(antennas[i].position.x, antennas[i].position.y, x2, y2);
 
                 //*** add line about the checking if it is the same one
 
@@ -162,7 +129,7 @@ function phase2(filename, point1, point2, callback) {
                 for (var i = 0; i < antennas1.length; i++) {
                     for (var j = 0; j < antennas2.length; j++) {
 //not the same antenna and the sum of transmissionLengths is bigger than the distance between them
-                        if (antennas1[i].id != antennas2[j].id && antennas1[i].transmissionLength + antennas2[j].transmissionLength >= distance(antennas1[i], antennas2[j])) {
+                        if (antennas1[i].id != antennas2[j].id && antennas1[i].transmissionLength + antennas2[j].transmissionLength >= distance(antennas1[i].position.x, antennas1[i].position.y, antennas2[j].position.x, antennas2[j].position.y)) {
                             callback(null, [antennas1[i].id, antennas2[j].id]);
                             return;
                         }
@@ -194,7 +161,7 @@ function findroute(startpoint, endpoint, antennasarray, antennaroute) {
         //TODO: maybe change here(!startpoint.transmissionLength && !endpoint.transmissionLength)
         //TODO endpoint.transmissionLength == undefined before calling the function
         //case start point is not antenna-cellphone
-        if (antennaroute.length == 0) {
+        if (antennaroute == []) {
             //case both point are cellphone and they have mutual antennas
             antennaroute = [mutualantennasinrange[0]];
         }
@@ -202,7 +169,7 @@ function findroute(startpoint, endpoint, antennasarray, antennaroute) {
             antennaroute.push(mutualantennasinrange[0]);
         }
         //TODO:check if you can run this line before checking the case of no items in array
-        if (minroute.length == 0 || mutualantennasinrange.length < minroute.length) {
+        if (minroute == [] || mutualantennasinrange.length < minroute.length) {
             minroute = antennaroute;
         }
         return;
@@ -224,7 +191,7 @@ function findroute(startpoint, endpoint, antennasarray, antennaroute) {
         findroute(antennasinrange[i], endpoint, notrepeatedantennas, antennaroute);
     }
 
-    return;
+    // todo: no need for this return;
 }
 //gets a point and and array and return an array of antennas that are in the range of the point
 function validantennasinrange(point, array) {
@@ -233,7 +200,7 @@ function validantennasinrange(point, array) {
     if (point.transmissionLength == undefined) {
         for (var i = 0; i < array.length; i++) {
 
-            if (array[i].transmissionLength >= distance(array[i], point)) {
+            if (array[i].transmissionLength >= distance(array[i].position.x, array[i].position.y, point.x, point.y)) {
                 results.push(array[i]);
             }
         }
@@ -241,7 +208,7 @@ function validantennasinrange(point, array) {
 //if its an antenna
     else {
         for (var i = 0; i < array.length; i++) {
-            if (array[i].transmissionLength + point.transmissionLength >= distance(array[i], point)) {
+            if (array[i].transmissionLength + point.transmissionLength >= distance(array[i].position.x, array[i].position.y, point.position.x, point.position.y)) {
                 results.push(array[i]);
             }
         }
@@ -250,6 +217,11 @@ function validantennasinrange(point, array) {
 }
 
 function phase3(filename, point1, point2, callback) {
+// take the point
+    var x1 = point1.x;
+    var y1 = point1.y;
+    var x2 = point2.x;
+    var y2 = point2.y;
 //read the file
     fs.readFile(__dirname + '/' + filename, function (err, result) {
         //console.log(__dirname + '/' + filename)
@@ -264,7 +236,7 @@ function phase3(filename, point1, point2, callback) {
             var antennas = JSON.parse(result).antennas;
             var history = [];
 
-            //TODO if startpoint=endpoint || one of them is undefind and in stable condition
+            //TODO if startpoint=endpoint || one of them is undefind
             findroute(point1, point2, antennas, history);
 
             if (minroute.length == 0) {
@@ -281,17 +253,14 @@ function phase3(filename, point1, point2, callback) {
     });
 }
 
-
-module.exports.phase1 = phase1;
-module.exports.phase2 = phase2;
-module.exports.phase3 = phase3;
-module.exports.phase4 = phase4;
-
-
-
+var dict = {};
 
 function phase4(filename, point1, point2, callback) {
-
+// take the point
+    var x1 = point1.x;
+    var y1 = point1.y;
+    var x2 = point2.x;
+    var y2 = point2.y;
 //read the file
     fs.readFile(__dirname + '/' + filename, function (err, result) {
         //console.log(__dirname + '/' + filename)
@@ -305,10 +274,10 @@ function phase4(filename, point1, point2, callback) {
             var antennas = JSON.parse(result).antennas;
             //initialzie dictionary
             //if same antenna return
-            var answer = [];
-            if (point1.x === point2.x && point1.y === point2.y) {
-                answer = validantennasinrange(point1, antennas); //maybe change to let.. OR define the variable only in 1 place
-                if (answer.length !== 0) {
+            var answer=[];
+            if(point1.x === point2.x && point1.y === point2.y){
+                answer=validantennasinrange(point1,antennas); //maybe change to let.. OR define the variable only in 1 place
+                if(answer.length!==0){
                     callback(null, [answer[0].id]);
                     return;
                 }
@@ -319,66 +288,204 @@ function phase4(filename, point1, point2, callback) {
                 }
             }
 
-            point2.id=-2;
-            point2.transmissionLength =0;
-            antennas.push(point2);
-
             for (var i = 0; i < antennas.length; i++) {
-                antennas[i].d = Number.MAX_VALUE;
-                //TODO change check if it works
-                //make sure that im using null and max value at correct places
-                antennas[i].parent = null;
-                //change all parent place so they include id
-                antennas[i].index = i;
-                antennas[i].isvisited = false;
-                antennas[i].parentindex=null;
-                //TOdo check parent index !=null
+                // antennas[i].history=[];
+                //dict[antennas[i].position.toString()] = antennas[i];
+                //dict.push({antennas[i].position :antennas[i]});
+                dict[antennas[i].id] = antennas[i];
+                //console.log(antennas[i].position.toString())
             }
-            //correct it it needs id ,
-            point1.transmissionLength =0;
-            point1.parent = -1;
-            point1.id=-1;
-            point1.d = 0;
-            point1.isvisited = false;
-            point1.index = antennas.length;
-            point1.parentindex = antennas.length;
-            antennas.push(point1);
 
-            //point1.parent=point1;
+            //antennas.unshift(point)
+            dict[-1]= point1;
+            dict[-2]= point2;
+            point2.history=[];
+            point2={
+                "id": "-2",
+                "position": {
+                    "x": point2.x,
+                    "y": point2.y
+                },
+                "transmissionLength": 0
+            };
 
+            antennas.push(point2);
+            var history=[];
+            recpath(point1, history, point2, antennas);
 
-            //read the file
-            //add startpoint and endpoint,endpoint and  all antennas get infinity,startpoint dont
+            var resultpath=dict[point2.id].history;
 
-            //make a new array with properties : parent , d, isvisited ,index
-            //call the function
-            dijekstra(point1,antennas);
-            var route = [];
-
-            route=routep1top2(point1,antennas[antennas.length-2], antennas, route);
-            if (route.length!=0) {
-                callback(null, route);
+            if (resultpath.length!=0){
+                for (var i = 0; i < resultpath.length; i++) {
+                    answer.push(resultpath[i].id);
+                    //console.log(answer);
+                }
+                callback(null, answer);
+                return;
             }
             else {
                 var error = new Error("no antennas in range");
                 callback(error);
+                return;
             }
 
-
-
-            return;
-            //caculate best route from a to
-
-            //check if no nighbers
         }
-    })
+    });
+}
+
+function sumhistory(array) {
+    var sum=0;
+    if(array.length === 0){
+        return 0;
+    }
+    for(var i = 0; i < array.length; i++){
+        sum+=array[i].mydistance;
+    }
+    return sum;
+}
+
+//todo: change to opts object
+
+function recpath(vertex, history, endpoint, array) {
+    //distance from point 1 in infinity for all
+    if (vertex == endpoint) {
+        dict[endpoint.id].history = history;
+        return;
+    }
+    if(vertex.position!=undefined){
+        if(vertex.position.x==endpoint.x&&vertex.position.y==endpoint.y){
+            return;
+        }
+    }
+
+    var neighbors = validantennasinrange(vertex, array);
+    if (neighbors.length == 0) {
+        return;
+    }
+    //got to endpoint
+
+    for (var i = 0; i < neighbors.length; i++) {
+        // todo: change to opts for distance
+        var mydistance = distance(neighbors[i].position.x, neighbors[i].position.y, vertex.x, vertex.y);
+        //the fastest way to get to that point
+        if(dict[neighbors[i].id].history==undefined) {
+
+            history=addtohistory(neighbors[i], history, vertex);
+
+            dict[neighbors[i].id].history = history;
+        }
+        else if (sumhistory(dict[neighbors[i].id].history) > sumhistory(history) + mydistance) {
+            //if on of the nigh
+            //check it
+            // if (validantennasinrange(endpoint, [neighbors[i]]) != 0) {
+            //     //I didnt calculate the distance between them .
+            //     //leave it this way
+            //     dict[neighbors[i]].history = history;
+            // }
+            history=addtohistory(neighbors[i], history, vertex);
+            dict[neighbors[i].id].history = history;
+
+        }
+        else {
+            history=addtohistory(neighbors[i], history, vertex);
+        }
+        var notrepeat = _.reject(array, function (el) {
+            return el.id == neighbors[i].id });
+
+        if(neighbors[i]!=endpoint) {
+            recpath(neighbors[i], history, endpoint, notrepeat);
+        }
+
+    }
+
+}
+
+function addtohistory(antenna, history,vertex) {
+    if (history.length == 0) {
+        //add distance
+        history = [antenna];
+        history[0].mydistance = distance(antenna.position.x,antenna.position.y, vertex.x, vertex.y);
+    }
+    else {
+        history.push(antenna);
+        history[history.length - 1].mydistance = distance(antenna.position.x, antenna.position.y, history[history.length - 2].position.x, history[history.length - 2].position.y);
+    }
+    return history;
+}
+
+module.exports.phase1 = phase1;
+module.exports.phase2 = phase2;
+module.exports.phase3 = phase3;
+module.exports.phase4 = phase4;
+module.exports.phase5 = phase5;
+
+
+
+function phase5(filename, point1, point2, callback) {
+// take the point
+    var x1 = point1.x;
+    var y1 = point1.y;
+    var x2 = point2.x;
+    var y2 = point2.y;
+//read the file
+    fs.readFile(__dirname + '/' + filename, function (err, result) {
+        //console.log(__dirname + '/' + filename)
+        if (err) { //todo: change !err
+//check if the path is wrong
+            var error = new Error(err);
+            callback(error);
+            return;
+        }
+        else {
+            var antennas = JSON.parse(result).antennas;
+            //initialzie dictionary
+            //if same antenna return
+            var answer=[];
+            if(point1.x === point2.x && point1.y === point2.y){
+                answer=validantennasinrange(point1,antennas); //maybe change to let.. OR define the variable only in 1 place
+                if(answer.length!==0){
+                    callback(null, [answer[0].id]);
+                    return;
+                }
+                else {
+                    var error = new Error("no antennas in range");
+                    callback(error);
+                    return;
+                }
+            }
+
+            antennas.push(point1);
+            antennas.push(point2);
+
+            for (var i = 0; i < antennas.length; i++) {
+                antennas[i].d=Number.MAX_VALUE;
+                antennas[i].parent.id=null;
+                //change all parent place so they include id
+                antennas[i].index=i;
+                antennas[i].isvisited=false;
+            }
+            point1.d=0;
+            point1.parent=antennas.length-2;
+            //point1.parent=point1;
+
+
+            //read the file
+    //add startpoint and endpoint,endpoint and  all antennas get infinity,startpoint dont
+
+    //make a new array with properties : parent , d, isvisited ,index
+    //call the function
+    var route=[];
+    routeatob(startpoint,endpoint,antennas,route);
+    //caculate best route from a to
+
+    //check if no nighbers
 }
 
 
 
 //TODO dont write the same code twice
 function isnieghber(point1, point2) {
-    if (point1.transmissionLength + point2.transmissionLength >= distance(point1, point2)) {
+    if (point1.transmissionLength + point2.transmissionLength >= distance(point1.position.x, point1.position.y, point2.position.x, point2.position.y)) {
         return true;
     }
     return false;
@@ -389,41 +496,27 @@ function tryupdateorrelief(p1,p2){
     if(p2.d==null){
         p2.d=p1.d+distance(p1,p2);
         //p2.parent.id=p1.id;
-        p2.parent=p1.id;
-        p2.parentindex=p1.index;
+        p2.parent.index=p1.index;
     }
     //relief
-    else if(p2.d>p1.d+distance(p1,p2)){
+    else if(p2.d<p1.d+distance(p1,p2)){
         p2.d=p1.d+distance(p1,p2);
-<<<<<<< HEAD
-        // p2.parent.id=p1.id;
-=======
        // p2.parent.id=p1.id;
->>>>>>> bf3698145c08e91b141c143399de53761e8c9a9a
-        p2.parent=p1.id;
-        p2.parentindex=p1.index;
+        p2.parent.index=p1.index;
     }
 }
 function findnextminimumpoint(pointsingraph){
     var minimum=null;
     for (var i = 0; i < pointsingraph.length; i++) {
-<<<<<<< HEAD
-        if(!pointsingraph[i].isvisited && (minimum==null || pointsingraph[i].d<minimum.d)){
-            minimum=pointsingraph[i];
-        }
-=======
             if(!pointsingraph[i].isvisited && (minimum==null || pointsingraph[i].d<minimum.d)){
                 minimum=pointsingraph[i];
             }
->>>>>>> bf3698145c08e91b141c143399de53761e8c9a9a
     }
     return minimum;
 }
 
 function dijekstra(point, pointsingraph) {
     for (var i = 0; i < pointsingraph.length; i++) {
-
-        //skip the case its endpoint or startpoint
         if (isnieghber(point,pointsingraph[i]) && point.isvisited === false) {
             tryupdateorrelief(point,pointsingraph[i]);
         }
@@ -443,55 +536,16 @@ function dijekstra(point, pointsingraph) {
     //find next point not visited and minimal value
 }
 
-//TODO check parent index
 
-function routep1top22(startpoint,endpoint,pointsingraph,route) {
-    while (endpoint != startpoint||endpoint.parentindex != endpoint.index){
-        if (route.length== 0) {
-            // if (pointsingraph[endpoint.parentindex]!= undefined) {
-            route = [pointsingraph[endpoint.parentindex].id];
-        }     else {
-            route.push(pointsingraph[endpoint.parentindex].id);
-        }
-        endpoint=pointsingraph[endpoint.parentindex];
-    }
-    return route;
-}
-
-function routep1top2(startpoint,endpoint,pointsingraph,route) {
-    if (endpoint == startpoint||endpoint.parentindex == endpoint.index) {
+function routeatob(startpoint,endpoint,pointsingraph,route){
+    if(endpoint==startpoint){
         return
     }
-    //todo delete the if
-    if (endpoint.parentindex != undefined) {
-        routep1top2(startpoint, pointsingraph[endpoint.parentindex], pointsingraph, route);
-    }
-    else return;
-
-    if (route = []) {
-<<<<<<< HEAD
-        // if (pointsingraph[endpoint.parentindex]!= undefined) {
-        route = [pointsingraph[endpoint.parentindex].id];
+    routeatob(startpoint,parentpointsingraph[endpoint.parent.index],pointsingraph,route);
+    if(route=[]){
+        route=[parentpointsingraph[endpoint.parent.index].id];
     }
     else {
-        //todo delete the if
-        //         if (pointsingraph[endpoint.parentindex] != undefined) {
-        route.push(pointsingraph[endpoint.parentindex].id);
+        route.push(parentpointsingraph[endpoint.parent.index].id);
     }
-
-    //   }
-=======
-       // if (pointsingraph[endpoint.parentindex]!= undefined) {
-            route = [pointsingraph[endpoint.parentindex].id];
-        }
-        else {
-            //todo delete the if
-   //         if (pointsingraph[endpoint.parentindex] != undefined) {
-                route.push(pointsingraph[endpoint.parentindex].id);
-            }
-
-     //   }
->>>>>>> bf3698145c08e91b141c143399de53761e8c9a9a
-    //}
-    return route;
 }

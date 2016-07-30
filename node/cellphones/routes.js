@@ -153,6 +153,11 @@ function checkcode() {
 
             for (var i =2; i <3; i++) {
 
+<<<<<<< HEAD
+=======
+            for (var i =2; i <3; i++) {
+
+>>>>>>> bf3698145c08e91b141c143399de53761e8c9a9a
                 createfile({antennas: result[i].antennas}, "checkit.json", function (error) {
                     if (error) {
                         return console.log(error);
@@ -164,9 +169,15 @@ function checkcode() {
                         x2 = result[i].cellPhone2.x;
                         y2 = result[i].cellPhone2.y;
 
+<<<<<<< HEAD
                         //stepone("checkit.json");
                         //steptwo("checkit.json");
                         stepthree("checkit.json");
+=======
+                       //stepone("checkit.json");
+                       //steptwo("checkit.json");
+                       stepthree("checkit.json");
+>>>>>>> bf3698145c08e91b141c143399de53761e8c9a9a
                         //stepfour("checkit.json");
                         deletetest("checkit.json");
                     }
