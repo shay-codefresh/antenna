@@ -122,6 +122,21 @@ function stepthree(filename) {
 }
 
 
+
+
+function stepfour(filename) {
+    tools.phase4(filename, {x: x1, y: y1}, {x: x2, y: y2}, function (err, res) {
+        if (err) {
+            console.error(err);
+        }
+        else {
+            console.log("step 4 finished");
+            console.log(res);
+            return res;
+        }
+    })
+}
+
 function checkcode() {
     fs.readFile(__dirname + '/' + 'checktask.json', function (err, result) {
 
@@ -137,7 +152,8 @@ function checkcode() {
 
            // console.log(Object.keys(result).length);
 
-            for (var i = 0; i <Object.keys(result).length; i++) {
+            for (var i =2; i <3; i++) {
+
                 createfile({antennas: result[i].antennas}, "checkit.json", function (error) {
                     if (error) {
                         return console.log(error);
@@ -149,9 +165,10 @@ function checkcode() {
                         x2 = result[i].cellPhone2.x;
                         y2 = result[i].cellPhone2.y;
 
-                        stepone("checkit.json");
-                        steptwo("checkit.json");
-                        stepthree("checkit.json");
+                       //stepone("checkit.json");
+                       //steptwo("checkit.json");
+                       stepthree("checkit.json");
+                        //stepfour("checkit.json");
                         deletetest("checkit.json");
                     }
                 })
