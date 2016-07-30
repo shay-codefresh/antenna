@@ -74,7 +74,7 @@ function stepone(filename) {
      */
     tools.phase1(filename, {x: x1, y: y1}, {x: x2, y: y2}, function (err, res) {
         if (err) {
-            return err;
+            console.error(err);
         }
         else {
             console.log("step 1 finished");
@@ -151,7 +151,7 @@ function checkcode() {
 
             // console.log(Object.keys(result).length);
 
-            for (var i =2; i <3; i++) {
+            for (var i =4; i <5; i++) {
 
                 createfile({antennas: result[i].antennas}, "checkit.json", function (error) {
                     if (error) {
@@ -167,7 +167,7 @@ function checkcode() {
                         //stepone("checkit.json");
                         //steptwo("checkit.json");
                         stepthree("checkit.json");
-                        //stepfour("checkit.json");
+                       // stepfour("checkit.json");
                         deletetest("checkit.json");
                     }
                 })
