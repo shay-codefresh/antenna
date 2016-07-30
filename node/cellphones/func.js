@@ -48,7 +48,7 @@ function phase1(filename, point1, point2, callback) {
             var antenna1 = [0, Number.MAX_VALUE];
             var antenna2 = [0, Number.MAX_VALUE];
             var antennas = JSON.parse(result).antennas;
-            if(antennas.length==0){
+            if (antennas.length == 0) {
                 var error = new Error("no antennas in range");
                 callback(error);
                 return;
@@ -133,7 +133,7 @@ function phase2(filename, point1, point2, callback) {
             }
             catch (ex) {
                 callback(ex);
-                return ;
+                return;
             }
             if (antennas2.length == 0 || antennas1.length == 0) {
 //if one of the cellphone dont have relavant antenna
@@ -161,8 +161,17 @@ function phase2(filename, point1, point2, callback) {
 }
 
 //minimum route
+//TODO rember that you start this and you need to chane it
 var minroute = [];
+var isstarted = false;
 
+function copyarray(array2) {
+    var result = [array2[0]];
+    for (var i = 1; i < array2.length; i++) {
+        result.push(array2[i]);
+    }
+    return result;
+}
 
 //move to neigber antenna in range until it gets to point 2
 function findroute(startpoint, endpoint, antennasarray, antennaroute) {
@@ -182,17 +191,33 @@ function findroute(startpoint, endpoint, antennasarray, antennaroute) {
             antennaroute = [mutualantennasinrange[0]];
         }
         else {
-            antennaroute.push(mutualantennasinrange[0]);
+            antennaroute.push(antennasarray[0]);
+            //there is problem with this.
+            //      antennasarray = _.reject(antennasarray, function (el) {
+            //        return el.id == antennasarray[0].id
+            //    });
+
+
         }
         //TODO:check if you can run this line before checking the case of no items in array
-        if (minroute.length == 0 || mutualantennasinrange.length < minroute.length) {
-            minroute = antennaroute;
+        if (isstarted == false) {
+            minroute = copyarray(antennaroute);
+            isstarted = true;
+            return;
+        }
+
+        //if (minroute.length == 0 || mutualantennasinrange.length < minroute.length) {
+        //if (minroute.length == 0 || antennaroute.length < minroute.length) {
+        if (antennaroute.length < minroute.length) {
+            minroute = copyarray(antennaroute);
+            //minroute = antennaroute;
         }
         return;
     }
     //case we didnt get to point 2
     for (var i = 0; i < antennasinrange.length; i++) {
         //do not repeat this point
+        //check if its really rejects
         var notrepeatedantennas = _.reject(antennasarray, function (el) {
             return el.id == antennasinrange[i].id
         });
@@ -253,13 +278,13 @@ function phase3(filename, point1, point2, callback) {
 
             //TODO if startpoint=endpoint || one of them is undefind and in stable condition
             try {
+                //minroute=copyarray(antennas);
                 findroute(point1, point2, antennas, history);
             }
             catch (er) {
                 callback(er);
                 return;
             }
-
 
             if (minroute.length == 0) {
                 var error = new Error("no antennas in range");
