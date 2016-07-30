@@ -11,11 +11,7 @@ function distance12(x1, y1, x2, y2) {
     if(x1<0||x2<0||y1<0||y2<0){
         return new error("negative values")
     }
-<<<<<<< HEAD
     else{
-=======
-        else{
->>>>>>> bf3698145c08e91b141c143399de53761e8c9a9a
         return math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2));
     }
     //TODO tr is not minus. if it is send error -check if the code can handle the error
@@ -395,11 +391,7 @@ function tryupdateorrelief(p1,p2){
     //relief
     else if(p2.d>p1.d+distance(p1,p2)){
         p2.d=p1.d+distance(p1,p2);
-<<<<<<< HEAD
         // p2.parent.id=p1.id;
-=======
-       // p2.parent.id=p1.id;
->>>>>>> bf3698145c08e91b141c143399de53761e8c9a9a
         p2.parent=p1.id;
         p2.parentindex=p1.index;
     }
@@ -407,15 +399,9 @@ function tryupdateorrelief(p1,p2){
 function findnextminimumpoint(pointsingraph){
     var minimum=null;
     for (var i = 0; i < pointsingraph.length; i++) {
-<<<<<<< HEAD
         if(!pointsingraph[i].isvisited && (minimum==null || pointsingraph[i].d<minimum.d)){
             minimum=pointsingraph[i];
         }
-=======
-            if(!pointsingraph[i].isvisited && (minimum==null || pointsingraph[i].d<minimum.d)){
-                minimum=pointsingraph[i];
-            }
->>>>>>> bf3698145c08e91b141c143399de53761e8c9a9a
     }
     return minimum;
 }
@@ -469,7 +455,6 @@ function routep1top2(startpoint,endpoint,pointsingraph,route) {
     else return;
 
     if (route = []) {
-<<<<<<< HEAD
         // if (pointsingraph[endpoint.parentindex]!= undefined) {
         route = [pointsingraph[endpoint.parentindex].id];
     }
@@ -480,18 +465,6 @@ function routep1top2(startpoint,endpoint,pointsingraph,route) {
     }
 
     //   }
-=======
-       // if (pointsingraph[endpoint.parentindex]!= undefined) {
-            route = [pointsingraph[endpoint.parentindex].id];
-        }
-        else {
-            //todo delete the if
-   //         if (pointsingraph[endpoint.parentindex] != undefined) {
-                route.push(pointsingraph[endpoint.parentindex].id);
-            }
-
-     //   }
->>>>>>> bf3698145c08e91b141c143399de53761e8c9a9a
     //}
     return route;
 }
