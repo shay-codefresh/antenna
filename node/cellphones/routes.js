@@ -7,7 +7,6 @@ var _ = require('lodash-node');
 var tools = require('./func');
 
 
-
 var x1 = 1;
 var y1 = 1;
 var x2 = 2;
@@ -51,10 +50,13 @@ function stepone(filename) {
     tools.phase1(filename, {x: x1, y: y1}, {x: x2, y: y2}, function (err, res) {
         if (err) {
             console.error(err);
+            return res;
         }
         else {
+
             console.log("step 1 finished");
             console.log(res);
+            console.log("hey shayyy");
             return res;
         }
     })
@@ -98,6 +100,7 @@ function stepfour(filename) {
             console.error(err);
         }
         else {
+
             console.log("step 4 finished");
             console.log(res);
             return res;
@@ -105,15 +108,18 @@ function stepfour(filename) {
     })
 }
 
-function checkcode() {
-    fs.readFile(__dirname + '/' + 'checktask.json', function (err, result) {
+function checkcode(index,step) {
+    console.log(__dirname);
+    fs.readFile(__dirname + '/' + 'checktask2.json', function (err, result) {
 
+    //fs.readFile('/Users/shay/WebstormProjects/test/node/cellphones/checktask.json', function (err, result) {
         if (err) {
             var error = new Error(err);
             callback(error);
             return;
         }
         else {
+
             result = JSON.parse(result);
             result = result.scenarios;
             //console.log(result);
@@ -121,7 +127,9 @@ function checkcode() {
             // console.log(Object.keys(result).length);
 
             //for (var i =4; i <5; i++) {
-            var i =6;
+            var i =index;
+var test={};
+                test.expect=result[i].results;
                 createfile({antennas: result[i].antennas}, "checkit.json", function (error) {
                     if (error) {
                         return console.log(error);
@@ -132,19 +140,32 @@ function checkcode() {
                         y1 = result[i].cellPhone1.y;
                         x2 = result[i].cellPhone2.x;
                         y2 = result[i].cellPhone2.y;
-
+                        if (step==1){
+                        stepone("checkit.json");
+                        }
+                        if (step==2){
+                            test.result=steptwo("checkit.json");
+                        }
+                        if (step==3){
+                            test.result=stepthree("checkit.json");
+                        }
+                        if (step==4){
+                            test.result=stepfour("checkit.json");
+                        }
                         //stepone("checkit.json");
-                        steptwo("checkit.json");
+                        //steptwo("checkit.json");
                         //stepthree("checkit.json");
                         //stepfour("checkit.json");
                         deletetest("checkit.json");
+                        return test;
                     }
                 });
            // }
         }
     })
 }
-checkcode();
+//checkcode();
+checkcode(2,1);
 
 
 
@@ -164,3 +185,11 @@ function deletetest(name) {
         }
     });
 }
+
+module.exports.stepone=stepone;
+module.exports.steptwo=steptwo;
+module.exports.stepthree=stepthree;
+module.exports.stepfour=stepfour;
+module.exports.checkcode=checkcode;
+module.exports.createfile=createfile;
+module.exports.deletefile=deletetest;

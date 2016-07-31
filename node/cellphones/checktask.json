@@ -277,7 +277,31 @@
             "x": 2,
             "y": 2
           },
-          "transmissionLength": 150
+          "transmissionLength": 20
+        },
+        {
+          "id": "2",
+          "position": {
+            "x": 20,
+            "y": 20
+          },
+          "transmissionLength": 15
+        },
+        {
+          "id": "3",
+          "position": {
+            "x": 30,
+            "y": 30
+          },
+          "transmissionLength": 5
+        },
+        {
+          "id": "4",
+          "position": {
+            "x": 1,
+            "y":1
+          },
+          "transmissionLength": 2
         }
       ],
       "cellPhone1": {
@@ -285,8 +309,54 @@
         "y": 1
       },
       "cellPhone2": {
-        "x": 1,
-        "y": 1
+        "x": 30,
+        "y": 30
+      },
+      "results": {
+        "phase1": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "phase2": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "phase3": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "phase4": [
+          [
+            "1",
+            "2"
+          ]
+        ]
+      }
+    },
+    {
+      "antennas": [
+        {
+          "id": "1",
+          "position": {
+            "x": 10,
+            "y": 10
+          },
+          "transmissionLength": 1
+        }
+      ],
+      "cellPhone1": {
+        "x": 9,
+        "y": 9
+      },
+      "cellPhone2": {
+        "x": 11,
+        "y": 11
       },
       "results": {
         "phase1": [
