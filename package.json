@@ -22,7 +22,7 @@
   },
   "engine": "node 5.7.1",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec ./node/test/func.unit.spec.js"
+    "test": "./node_modules/.bin/mocha --reporter spec ./node/test/functions.unit.spec.js"
   },
   "repository": {
     "type": "git",
