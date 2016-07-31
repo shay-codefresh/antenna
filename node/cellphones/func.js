@@ -3,6 +3,7 @@ var fs = require("fs");
 var _ = require('lodash-node');
 
 function distance(dot1, dot2) {
+    //the function can handle points and antennas
     var x1;
     var y1;
     var x2;
@@ -33,7 +34,24 @@ function distance(dot1, dot2) {
     //TODO tr is not minus. if it is send error -check if the code can handle the error
 
 }
-
+function findclosestantenna(antennas,antenna1,antenna2,point1,point2) {
+    for (var i = 0; i < antennas.length; i++) {
+        if (antennas[i].transmissionLength == undefined || antennas[i].transmissionLength == null) {
+            callback(new Error("no transmissionLength"));
+            return;
+        }
+        antennas[i].distance1 = distance(antennas[i], point1);
+        antennas[i].distance2 = distance(antennas[i], point2);
+        if (antennas[i].distance1 < antenna1[1]) {
+            antenna1[0] = antennas[i].id;
+            antenna1[1] = antennas[i].distance1;
+        }
+        if (antennas[i].distance2 < antenna2[1]) {
+            antenna2[0] = antennas[i].id;
+            antenna2[1] = antennas[i].distance2;
+        }
+    }
+}
 
 function phase1(filename, point1, point2, callback) {
     fs.readFile(__dirname + '/' + filename, function (err, result) {
@@ -44,45 +62,31 @@ function phase1(filename, point1, point2, callback) {
             return;
         }
         else {
-            //ann array with id and distance
-            var antenna1 = [0, Number.MAX_VALUE];
-            var antenna2 = [0, Number.MAX_VALUE];
+            //ann array with id and distance,each array for each cellphone
+            var antennapoint1 = [0, Number.MAX_VALUE];
+            var antennapoint2 = [0, Number.MAX_VALUE];
             var antennas = JSON.parse(result).antennas;
             if(antennas.length==0){
-                var error = new Error("no antennas in range");
+                var error ="no antennas in range";
                 callback(error);
                 return;
             }
             //var antennas = antennas.antennas;
             try {
-                for (var i = 0; i < antennas.length; i++) {
-                    if (antennas[i].transmissionLength == undefined || antennas[i].transmissionLength == null) {
-                        callback(new Error("no transmissionLength"));
-                        return;
-                    }
-                    antennas[i].distance1 = distance(antennas[i], point1);
-                    antennas[i].distance2 = distance(antennas[i], point2);
-                    if (antennas[i].distance1 < antenna1[1]) {
-                        antenna1[0] = antennas[i].id;
-                        antenna1[1] = antennas[i].distance1;
-                    }
-                    if (antennas[i].distance2 < antenna2[1]) {
-                        antenna2[0] = antennas[i].id;
-                        antenna2[1] = antennas[i].distance2;
-                    }
-                }
+                findclosestantenna(antennas,antennapoint1,antennapoint2,point1,point2);
             }
             catch (ex) {
-                callback(ex);
-                return;
+                //callback(ex);
+                callback(new Error("bad input"));
+                return ;
             }
             //in case its the same antenna
-            if (antenna1[0] === antenna2[0]) {
-                callback(null, [antenna1[0]]);
+            if (antennapoint1[0] === antennapoint2[0]) {
+                callback(null, [antennapoint1[0]]);
                 return;
             }
             else {
-                var result = [antenna1[0], antenna2[0]];
+                var result = [antennapoint1[0], antennapoint2[0]];
                 callback(null, result);
                 return;
             }
@@ -109,9 +113,11 @@ function phase2(filename, point1, point2, callback) {
             try {
                 for (var i = 0; i < antennas.length; i++) {
                     if (antennas[i].transmissionLength == undefined || antennas[i].transmissionLength == null) {
+                        //if there is bad input
                         callback(new Error("no transmissionLength"));
                         return;
                     }
+                    //distance 1 - distance from point 1
                     antennas[i].distance1 = distance(antennas[i], point1);
                     antennas[i].distance2 = distance(antennas[i], point2);
 
@@ -122,7 +128,7 @@ function phase2(filename, point1, point2, callback) {
                         callback(null, [antennas[i].id]);
                         return;
                     }
-//enters only the relevants antennas for each cellphone
+                    //enters only the relevants antennas for each cellphone
                     if (antennas[i].distance1 <= antennas[i].transmissionLength) {
                         antennas1.push(antennas[i]);
                     }
@@ -132,12 +138,14 @@ function phase2(filename, point1, point2, callback) {
                 }
             }
             catch (ex) {
-                callback(ex);
+                //callback(ex);
+                    callback(new Error("bad input"));
+
                 return ;
             }
             if (antennas2.length == 0 || antennas1.length == 0) {
 //if one of the cellphone dont have relavant antenna
-                var error = new Error("no antennas in range");
+                var error ="no antennas in range";
                 callback(error);
                 return;
             }
@@ -152,7 +160,7 @@ function phase2(filename, point1, point2, callback) {
                     }
                 }
 //nothing found
-                var error = new Error("no antennas in range");
+                var error ="no antennas in range";
                 callback(error);
                 return;
             }
@@ -277,7 +285,7 @@ function phase3(filename, point1, point2, callback) {
             }
 
             if (minroute.length == 0) {
-                var error = new Error("no antennas in range");
+                var error ="no antennas in range";
                 callback(error);
                 return;
             }
@@ -289,12 +297,6 @@ function phase3(filename, point1, point2, callback) {
         }
     });
 }
-
-
-module.exports.phase1 = phase1;
-module.exports.phase2 = phase2;
-module.exports.phase3 = phase3;
-module.exports.phase4 = phase4;
 
 
 function phase4(filename, point1, point2, callback) {
@@ -320,7 +322,7 @@ function phase4(filename, point1, point2, callback) {
                     return;
                 }
                 else {
-                    var error = new Error("no antennas in range");
+                    var error ="no antennas in range";
                     callback(error);
                     return;
                 }
@@ -362,17 +364,20 @@ function phase4(filename, point1, point2, callback) {
                 dijekstra(point1, antennas);
             }
             catch (ex) {
-                callback(ex);
+                callback(new Error("bad input"));
+                //callback(ex);
+                return;
             }
 
             var route = [];
+            //if endpoint not null
             if (antennas[antennas.length - 2].parentindex != null) {
                 route = [antennas[antennas[antennas.length - 2].parentindex].id];
                 route = routep1top2(point1, antennas[antennas[antennas.length - 2].parentindex], antennas, route);
                 callback(null, route);
             }
             else {
-                var error = new Error("no antennas in range");
+                var error ="no antennas in range";
                 callback(error);
             }
         }
@@ -419,12 +424,6 @@ function dijekstra(point, pointsingraph) {
     if (nextpoint != null) {
         dijekstra(nextpoint, pointsingraph);
     }
-
-    // and for everyniceghbor check if you can relief them
-    //if not visited && nighber
-    // call tryupdateorrelief
-    //isvisted =true
-    //find next point not visited and minimal value
 }
 
 
@@ -451,3 +450,11 @@ function routep1top2(startpoint, endpoint, pointsingraph, route) {
     }
     return route;
 }
+
+
+
+module.exports.phase1 = phase1;
+module.exports.phase2 = phase2;
+module.exports.phase3 = phase3;
+module.exports.phase4 = phase4;
+
