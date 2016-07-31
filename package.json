@@ -10,7 +10,8 @@
     "express": "^4.14.0",
     "gulp": "^3.9.1",
     "lodash-node": "3.10.2",
-    "mathjs": "^3.3.0"
+    "mathjs": "^3.3.0",
+    "q": "^1.4.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
