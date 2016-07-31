@@ -5,33 +5,15 @@ var fs = require("fs");
 
 var _ = require('lodash-node');
 var tools = require('./func');
-/*
- function step1() {
- var x1=1;
- var y1=2;
- var x2=61;
- var y2=61;
- tools.myread("antenna.json",x1,y1,x2,y2, function (err, res) {
- if (err) {
- return err;
- }
- else {
- var anthennas=[];
- var ordered1=tools.orderarray(res,1);
- var ordered2=tools.orderarray(res,2);
- anthennas[0]=ordered1[0].id;
- anthennas[1]=ordered2[0].id;
- console.log(anthennas);
- return anthennas;
- }
- })
- }
- */
+
+
 
 var x1 = 1;
 var y1 = 1;
 var x2 = 2;
 var y2 = 2;
+
+
 function runit(filename){
     tools.phase1(filename, {x: x1, y: y1}, {x: x2, y: y2}, function (err, res) {
         if (err) {
@@ -51,7 +33,7 @@ function runit(filename){
                     // return res;
                     tools.phase3(filename, {x: x1, y: y1}, {x: x2, y: y2}, function (err, res) {
                         if (err) {
-                            console.error(err);
+                            console.Error(err);
                         }
                         else {
                             console.log("step 3 finished");
@@ -66,12 +48,6 @@ function runit(filename){
 }
 
 function stepone(filename) {
-    /*
-     var x1=1;
-     var y1=1;
-     var x2=2;
-     var y2=2;
-     */
     tools.phase1(filename, {x: x1, y: y1}, {x: x2, y: y2}, function (err, res) {
         if (err) {
             console.error(err);
@@ -86,13 +62,6 @@ function stepone(filename) {
 
 
 function steptwo(filename) {
-    /*
-     var x1=1;
-     var y1=1;
-     var x2=2;
-     var y2=2;
-     */
-
     tools.phase2(filename, {x: x1, y: y1}, {x: x2, y: y2}, function (err, res) {
         if (err) {
             console.error(err);
@@ -151,8 +120,8 @@ function checkcode() {
 
             // console.log(Object.keys(result).length);
 
-            for (var i =4; i <5; i++) {
-
+            //for (var i =4; i <5; i++) {
+            var i =6;
                 createfile({antennas: result[i].antennas}, "checkit.json", function (error) {
                     if (error) {
                         return console.log(error);
@@ -165,13 +134,13 @@ function checkcode() {
                         y2 = result[i].cellPhone2.y;
 
                         //stepone("checkit.json");
-                        //steptwo("checkit.json");
-                        stepthree("checkit.json");
-                       // stepfour("checkit.json");
+                        steptwo("checkit.json");
+                        //stepthree("checkit.json");
+                        //stepfour("checkit.json");
                         deletetest("checkit.json");
                     }
-                })
-            }
+                });
+           // }
         }
     })
 }

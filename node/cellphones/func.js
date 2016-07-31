@@ -25,7 +25,7 @@ function distance(dot1, dot2) {
         y2 = dot2.position.y;
     }
     if (x1 < 0 || x2 < 0 || y1 < 0 || y2 < 0) {
-        return new error("negative values")
+        throw new Error("negative values")
     }
     else {
 
@@ -34,7 +34,7 @@ function distance(dot1, dot2) {
     //TODO tr is not minus. if it is send error -check if the code can handle the error
 
 }
-function findclosestantenna(antennas,antenna1,antenna2,point1,point2) {
+function findclosestantenna(antennas, antenna1, antenna2, point1, point2) {
     for (var i = 0; i < antennas.length; i++) {
         if (antennas[i].transmissionLength == undefined || antennas[i].transmissionLength == null) {
             callback(new Error("no transmissionLength"));
@@ -66,19 +66,19 @@ function phase1(filename, point1, point2, callback) {
             var antennapoint1 = [0, Number.MAX_VALUE];
             var antennapoint2 = [0, Number.MAX_VALUE];
             var antennas = JSON.parse(result).antennas;
-            if(antennas.length==0){
-                var error ="no antennas in range";
+            if (antennas.length == 0) {
+                var error = new Error("no antennas in range");
                 callback(error);
                 return;
             }
             //var antennas = antennas.antennas;
             try {
-                findclosestantenna(antennas,antennapoint1,antennapoint2,point1,point2);
+                findclosestantenna(antennas, antennapoint1, antennapoint2, point1, point2);
             }
             catch (ex) {
                 //callback(ex);
                 callback(new Error("bad input"));
-                return ;
+                return;
             }
             //in case its the same antenna
             if (antennapoint1[0] === antennapoint2[0]) {
@@ -111,6 +111,7 @@ function phase2(filename, point1, point2, callback) {
             var antennas2 = [];
 
             try {
+                // findantennasforpoints(antennas,antennas1,antennas2,point1,point2);
                 for (var i = 0; i < antennas.length; i++) {
                     if (antennas[i].transmissionLength == undefined || antennas[i].transmissionLength == null) {
                         //if there is bad input
@@ -139,13 +140,13 @@ function phase2(filename, point1, point2, callback) {
             }
             catch (ex) {
                 //callback(ex);
-                    callback(new Error("bad input"));
+                callback(new Error("bad input"));
 
-                return ;
+                return;
             }
             if (antennas2.length == 0 || antennas1.length == 0) {
 //if one of the cellphone dont have relavant antenna
-                var error ="no antennas in range";
+                var error = new Error("no antennas in range");
                 callback(error);
                 return;
             }
@@ -160,7 +161,7 @@ function phase2(filename, point1, point2, callback) {
                     }
                 }
 //nothing found
-                var error ="no antennas in range";
+                var error = new Error("no antennas in range");
                 callback(error);
                 return;
             }
@@ -169,18 +170,18 @@ function phase2(filename, point1, point2, callback) {
 }
 
 //minimum route
-//TODO rember that you start this and you need to chane it
+
 var minroute = [];
-var isstarted=false;
+var isstarted = false;
 
 function copyarray(array2) {
-    var result=[array2[0]];
-    for(var i=1;i<array2.length;i++){
+    var result = [array2[0]];
+    for (var i = 1; i < array2.length; i++) {
         result.push(array2[i]);
     }
     return result;
 }
-
+//TODO case of same id entered
 //move to neigber antenna in range until it gets to point 2
 function findroute(startpoint, endpoint, antennasarray, antennaroute) {
     //checks if theres mutual antennas
@@ -200,13 +201,13 @@ function findroute(startpoint, endpoint, antennasarray, antennaroute) {
         else {
             antennaroute.push(mutualantennasinrange[0]);
         }
-       if(isstarted==false){
-           minroute=copyarray(antennaroute);
-            isstarted=true;
+        if (isstarted == false) {
+            minroute = copyarray(antennaroute);
+            isstarted = true;
             return;
         }
         if (antennaroute.length < minroute.length) {
-            minroute=copyarray(antennaroute);
+            minroute = copyarray(antennaroute);
         }
         return;
     }
@@ -218,12 +219,12 @@ function findroute(startpoint, endpoint, antennasarray, antennaroute) {
             return el.id == antennasinrange[i].id
         });
         //if its the first time running antennaroute is empty
-        var antennanewroute=[];
+        var antennanewroute = [];
         if (antennaroute.length == 0) {
-            antennanewroute  = [antennasinrange[i]];
+            antennanewroute = [antennasinrange[i]];
         }
         else {
-            antennanewroute=copyarray(antennaroute);
+            antennanewroute = copyarray(antennaroute);
             antennanewroute.push(antennasinrange[i]);
         }
         //recursive call for next step . from antennasinrange[i] as start point
@@ -236,8 +237,6 @@ function findroute(startpoint, endpoint, antennasarray, antennaroute) {
 function validantennasinrange(point, array) {
     var results = [];
     //if its a point
-
-
     if (point.transmissionLength == undefined) {
         for (var i = 0; i < array.length; i++) {
 
@@ -285,7 +284,7 @@ function phase3(filename, point1, point2, callback) {
             }
 
             if (minroute.length == 0) {
-                var error ="no antennas in range";
+                var error = new Error("no antennas in range");
                 callback(error);
                 return;
             }
@@ -298,7 +297,15 @@ function phase3(filename, point1, point2, callback) {
     });
 }
 
-
+function phase4initializepoint(point1, antennas) {
+    point1.transmissionLength = 0;
+    point1.parent = -1;
+    point1.id = -1;
+    point1.d = 0;
+    point1.isvisited = false;
+    point1.index = antennas.length;
+    point1.parentindex = antennas.length;
+}
 function phase4(filename, point1, point2, callback) {
 
 //read the file
@@ -312,7 +319,6 @@ function phase4(filename, point1, point2, callback) {
         }
         else {
             var antennas = JSON.parse(result).antennas;
-            //initialzie dictionary
             //if same antenna return
             var answer = [];
             if (point1.x === point2.x && point1.y === point2.y) {
@@ -322,7 +328,7 @@ function phase4(filename, point1, point2, callback) {
                     return;
                 }
                 else {
-                    var error ="no antennas in range";
+                    var error = new Error("no antennas in range");
                     callback(error);
                     return;
                 }
@@ -344,22 +350,9 @@ function phase4(filename, point1, point2, callback) {
                 antennas[i].index = i;
                 antennas[i].isvisited = false;
                 antennas[i].parentindex = null;
-                //TOdo check parent index !=null
             }
-            //correct it it needs id ,
-            point1.transmissionLength = 0;
-            point1.parent = -1;
-            point1.id = -1;
-            point1.d = 0;
-            point1.isvisited = false;
-            point1.index = antennas.length;
-            point1.parentindex = antennas.length;
+            phase4initializepoint(point1, antennas);
             antennas.push(point1);
-            //point1.parent=point1;
-            //read the file
-            //add startpoint and endpoint,endpoint and  all antennas get infinity,startpoint dont
-            //make a new array with properties : parent , d, isvisited ,index
-            //call the function
             try {
                 dijekstra(point1, antennas);
             }
@@ -377,7 +370,7 @@ function phase4(filename, point1, point2, callback) {
                 callback(null, route);
             }
             else {
-                var error ="no antennas in range";
+                var error = new Error("no antennas in range");
                 callback(error);
             }
         }
@@ -450,7 +443,6 @@ function routep1top2(startpoint, endpoint, pointsingraph, route) {
     }
     return route;
 }
-
 
 
 module.exports.phase1 = phase1;
