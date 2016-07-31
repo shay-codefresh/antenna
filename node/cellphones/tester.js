@@ -45,7 +45,7 @@ function checkcode() {
                                             .then(function (res) {
                                                 var passed = false;
                                                 for (var i = 0; i < scenario.results["phase" + phaseNumber].length; i++) {
-                                                    if (_.isEqual(res, scenario.results["phase" + phaseNumber][i])) {
+                                                    if (_.isEqual(res, scenario.results["phase" + phaseNumber][i][0])) {
                                                         break;
                                                     }
                                                 }
@@ -53,14 +53,14 @@ function checkcode() {
                                                     console.log("\tPhase " + phaseNumber + " passed");
                                                 }
                                                 else {
-                                                    console.error("\tPhase " + phaseNumber + " failed. result: " + JSON.stringify(res) + ". expected: " + JSON.stringify(scenario.results["phase" + phaseNumber]));
+                                                    console.error("\tPhase " + phaseNumber + " failed. result: " + JSON.stringify(res) + ". expected: " + JSON.stringify(scenario.results["phase" + phaseNumber][0]));
                                                 }
                                             }, function (err) {
-                                                if (scenario.results["phase" + phaseNumber] === "error" && err.toString() === "Error: no antennas in range") {
+                                                if (scenario.results["phase" + phaseNumber][0] === "error" && err.toString() === "Error: no antennas in range") {
                                                     console.log("\tPhase " + phaseNumber + " passed");
                                                 }
                                                 else {
-                                                    console.error("\tPhase " + phaseNumber + " failed. result: " + err.toString() + ". expected: " + JSON.stringify(scenario.results["phase" + phaseNumber]));
+                                                    console.error("\tPhase " + phaseNumber + " failed. result: " + err.toString() + ". expected: " + JSON.stringify(scenario.results["phase" + phaseNumber][0]));
                                                 }
                                             })
                                             .then(function () {
