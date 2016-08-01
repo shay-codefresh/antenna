@@ -110,7 +110,7 @@ function stepfour(filename) {
 
 function checkcode(index,step) {
     console.log(__dirname);
-    fs.readFile(__dirname + '/' + 'checktask2.json', function (err, result) {
+    fs.readFile(__dirname + '/' + 'checktask.json', function (err, result) {
 
     //fs.readFile('/Users/shay/WebstormProjects/test/node/cellphones/checktask.json', function (err, result) {
         if (err) {
@@ -129,28 +129,29 @@ function checkcode(index,step) {
             //for (var i =4; i <5; i++) {
             var i =index;
 var test={};
-                test.expect=result[i].results;
+               // test.expect=result[i].results;
                 createfile({antennas: result[i].antennas}, "checkit.json", function (error) {
                     if (error) {
                         return console.log(error);
                     }
-                    else {
+                    //else {
                         console.log('scenarios :'+i);
                         x1 = result[i].cellPhone1.x;
                         y1 = result[i].cellPhone1.y;
                         x2 = result[i].cellPhone2.x;
                         y2 = result[i].cellPhone2.y;
+                        /*
                         if (step==1){
                         stepone("checkit.json");
                         }
                         if (step==2){
-                            test.result=steptwo("checkit.json");
+                            steptwo("checkit.json");
                         }
                         if (step==3){
-                            test.result=stepthree("checkit.json");
+                            stepthree("checkit.json");
                         }
                         if (step==4){
-                            test.result=stepfour("checkit.json");
+                            stepfour("checkit.json");
                         }
                         //stepone("checkit.json");
                         //steptwo("checkit.json");
@@ -158,14 +159,17 @@ var test={};
                         //stepfour("checkit.json");
                         deletetest("checkit.json");
                         return test;
-                    }
+                    */
+                        stepfour("checkit.json");
+                        deletetest("checkit.json");
+                  //  }
                 });
            // }
         }
     })
 }
 //checkcode();
-checkcode(2,1);
+checkcode(7,2);
 
 
 

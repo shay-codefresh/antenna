@@ -378,7 +378,7 @@ function phase4(filename, point1, point2, callback) {
 }
 
 
-function isnieghber(point1, point2) {
+function isneighbour(point1, point2) {
     if (point1.transmissionLength + point2.transmissionLength >= distance(point1, point2)) {
         return true;
     }
@@ -407,7 +407,7 @@ function dijekstra(point, pointsingraph) {
     for (var i = 0; i < pointsingraph.length; i++) {
 
         //skip the case its endpoint or startpoint
-        if (isnieghber(point, pointsingraph[i]) && point.isvisited === false) {
+        if (isneighbour(point, pointsingraph[i]) && point.isvisited === false) {
             tryupdateorrelief(point, pointsingraph[i]);
         }
     }
@@ -449,4 +449,16 @@ module.exports.phase1 = phase1;
 module.exports.phase2 = phase2;
 module.exports.phase3 = phase3;
 module.exports.phase4 = phase4;
+module.exports.distance=distance;
+module.exports.findclosestantenna=findclosestantenna;
+module.exports.copyarray=copyarray;
+module.exports.findroute = findroute;
+module.exports.validantennasinrange= validantennasinrange;
+module.exports.phase4initializepoint= phase4initializepoint;
+module.exports.isneighbour= isneighbour;
+module.exports.tryupdateorrelief=tryupdateorrelief;
+module.exports.findnextminimumpoint= findnextminimumpoint;
+module.exports.dijekstra= dijekstra;
+module.exports.routep1top2 = routep1top2;
+
 
