@@ -42,15 +42,9 @@
             "2"
           ]
         ],
-        "phase2": [
-          "error"
-        ],
-        "phase3": [
-          "error"
-        ],
-        "phase4": [
-          "error"
-        ]
+        "phase2": "error",
+        "phase3": "error",
+        "phase4": "error"
       }
     },
     {
