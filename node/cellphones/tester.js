@@ -53,14 +53,14 @@ function checkcode() {
                                                     console.log("\tPhase " + phaseNumber + " passed");
                                                 }
                                                 else {
-                                                    console.error("\tPhase " + phaseNumber + " failed. result: " + JSON.stringify(res) + ". expected: " + JSON.stringify(scenario.results["phase" + phaseNumber][0]));
+                                                    console.error("\tPhase " + phaseNumber + " failed. result: " + JSON.stringify(res) + ". expected: " + JSON.stringify(scenario.results["phase" + phaseNumber][]));
                                                 }
                                             }, function (err) {
-                                                if (scenario.results["phase" + phaseNumber][0] === "error" && err.toString() === "Error: no antennas in range") {
+                                                if (scenario.results["phase" + phaseNumber] === "error" && err.toString() === "Error: no antennas in range") {
                                                     console.log("\tPhase " + phaseNumber + " passed");
                                                 }
                                                 else {
-                                                    console.error("\tPhase " + phaseNumber + " failed. result: " + err.toString() + ". expected: " + JSON.stringify(scenario.results["phase" + phaseNumber][0]));
+                                                    console.error("\tPhase " + phaseNumber + " failed. result: " + err.toString() + ". expected: " + JSON.stringify(scenario.results["phase" + phaseNumber]));
                                                 }
                                             })
                                             .then(function () {
