@@ -9,15 +9,17 @@ var tools  = require('./func');
 var Q      = require('q');
 var domain = require('domain');
 
+var wait = 10;
+
 function checkcode() {
-    return Q.nfcall(fs.readFile, __dirname + '/checktask.json')
+    return Q.nfcall(fs.readFile, __dirname + '/itaitest.json')
         .then(function (res) {
             res           = JSON.parse(res);
             var scenarios = res.scenarios;
 
             var handler = function (scenario, index) {
                 console.log("Running test:" + index);
-                return Q.delay(200)
+                return Q.delay(wait)
                     .then(function(){
                         var antennasFileName = 'antennas:' + index + '.json';
                         return Q.nfcall(fs.writeFile, __dirname + '/' + antennasFileName, JSON.stringify({antennas: scenario.antennas}, null, 2))
@@ -27,8 +29,8 @@ function checkcode() {
                                     y: scenario.cellPhone1.y
                                 };
                                 var cellPhone2 = {
-                                    x: scenario.cellPhone1.x,
-                                    y: scenario.cellPhone1.y
+                                    x: scenario.cellPhone2.x,
+                                    y: scenario.cellPhone2.y
                                 };
 
                                 var phaseHandler = function (phaseNumber) {
@@ -37,7 +39,7 @@ function checkcode() {
                                     var d = domain.create();
                                     d.on("error", function (err) {
                                         console.error("\tPhase " + phaseNumber + " failed. uncaught exception: " + err.toString());
-                                        Q.delay(200)
+                                        Q.delay(wait)
                                             .then(deferred.resolve);
                                     });
                                     d.run(function () {
@@ -65,7 +67,7 @@ function checkcode() {
                                                 }
                                             })
                                             .then(function () {
-                                                return Q.delay(200)
+                                                return Q.delay(wait)
                                             })
                                             .then(deferred.resolve);
                                     });
@@ -88,8 +90,8 @@ function checkcode() {
                 testHandlers.push(handler.bind(this, scenario, index + 1));
             });
             return testHandlers.reduce(Q.when, Q.resolve());
-        });
+        })
 }
 
 
-checkcode();
+checkcode().done();
