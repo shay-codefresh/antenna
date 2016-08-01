@@ -110,7 +110,7 @@ function stepfour(filename) {
 
 function checkcode(index,step) {
     console.log(__dirname);
-    fs.readFile(__dirname + '/' + 'checktask.json', function (err, result) {
+    fs.readFile(__dirname + '/' + 'itaitest.json', function (err, result) {
 
     //fs.readFile('/Users/shay/WebstormProjects/test/node/cellphones/checktask.json', function (err, result) {
         if (err) {
@@ -160,7 +160,7 @@ var test={};
                         deletetest("checkit.json");
                         return test;
                     */
-                        stepfour("checkit.json");
+                        stepthree("checkit.json");
                         deletetest("checkit.json");
                   //  }
                 });
@@ -169,7 +169,7 @@ var test={};
     })
 }
 //checkcode();
-checkcode(7,2);
+checkcode(12,2);
 
 
 

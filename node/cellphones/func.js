@@ -269,6 +269,8 @@ function phase3(filename, point1, point2, callback) {
             return;
         }
         else {
+            minroute = [];
+            isstarted = false;
             //ann array with id and distance
             var antennas = JSON.parse(result).antennas;
             var history = [];
