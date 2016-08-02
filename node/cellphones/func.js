@@ -346,8 +346,6 @@ function phase4(filename, point1, point2, callback) {
                     return;
                 }
                 antennas[i].d = Number.MAX_VALUE;
-                //TODO change check if it works
-                //make sure that im using null and max value at correct places
                 antennas[i].parent = null;
                 antennas[i].index = i;
                 antennas[i].isvisited = false;
@@ -447,6 +445,15 @@ function routep1top2(startpoint, endpoint, pointsingraph, route) {
 }
 
 
+function getminroute() {
+    return minroute;
+}
+
+function a(func){
+    findroute=func;
+}
+
+module.exports.a=a;
 module.exports.phase1 = phase1;
 module.exports.phase2 = phase2;
 module.exports.phase3 = phase3;
@@ -462,5 +469,8 @@ module.exports.tryupdateorrelief=tryupdateorrelief;
 module.exports.findnextminimumpoint= findnextminimumpoint;
 module.exports.dijekstra= dijekstra;
 module.exports.routep1top2 = routep1top2;
+module.exports.getminroute=getminroute;
+module.exports.minroute=minroute;
+module.exports.isstarted=isstarted;
 
 

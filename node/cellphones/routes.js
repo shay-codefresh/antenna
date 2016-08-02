@@ -110,7 +110,7 @@ function stepfour(filename) {
 
 function checkcode(index,step) {
     console.log(__dirname);
-    fs.readFile(__dirname + '/' + 'itaitest.json', function (err, result) {
+    fs.readFile(__dirname + '/' + 'checktask.json', function (err, result) {
 
     //fs.readFile('/Users/shay/WebstormProjects/test/node/cellphones/checktask.json', function (err, result) {
         if (err) {
@@ -169,7 +169,7 @@ var test={};
     })
 }
 //checkcode();
-checkcode(12,2);
+checkcode(4,2);
 
 
 

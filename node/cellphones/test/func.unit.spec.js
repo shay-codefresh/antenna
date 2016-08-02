@@ -3,17 +3,16 @@
  */
 var chai = require('chai');
 var expect = chai.expect;
-var proxyquire = require('proxyquire').noCallThru();
+var proxyquire = require('proxyquire');
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
 chai.use(sinonChai);
-
 var tools = require('../func');
 
 
 describe("antennas functions tests", function () {
     describe("positive", function () {
-        it("should return the distance of 2 points", function () {
+        it("should return the distance of 2 points,distance", function () {
             expect(tools.distance({x: 1, y: 0}, {x: 2, y: 0})).to.equal(1);
             expect(tools.distance({x: 1, y: 2}, {x: 0, y: 2})).to.equal(1);
             expect(tools.distance({x: 0, y: 0}, {x: 4, y: 3})).to.equal(5);
@@ -84,7 +83,7 @@ describe("antennas functions tests", function () {
             })).to.equal(5);
         });
 
-        it("should return the closest antennas of a given point", function () {
+        it("should return the closest antennas of a given point,findclosestantenna", function () {
             var antennas = [
                 {
                     "id": "1",
@@ -143,7 +142,7 @@ describe("antennas functions tests", function () {
             expect(antenna1[0][0]).to.equal("1");
             expect(antenna2[0][0]).to.equal("5");
         });
-        it("should return a copy of a given array", function () {
+        it("should return a copy of a given array,copyarray", function () {
             // var array1=[1,5,7,8,9,33,85,77];
             var array1 = [
                 {
@@ -200,7 +199,7 @@ describe("antennas functions tests", function () {
                 expect(array1[i]).to.equal(array2[i]);
             }
         });
-        it("should give the neighbour antennas of a specific point", function () {
+        it("should give the neighbour antennas of a specific point,validantennasinrange", function () {
             var antennas = [
                 {
                     "id": "1",
@@ -270,7 +269,7 @@ describe("antennas functions tests", function () {
                         "transmissionLength": 150
                     }]);
         });
-        it("should give the neighbour antennas of a specific point", function () {
+        it("should start the point with startup properties,phase4initializepoint", function () {
             var point1={x:5,y:5};
             var antennas = [
                 {
@@ -335,11 +334,11 @@ describe("antennas functions tests", function () {
                 parentindex: antennas.length
             });
         });
-        it("should return true if the given points are neighbours", function () {
+        it("should return true if the given points are neighbours,isneighbour", function () {
             expect(tools.isneighbour({x:1,y:1,transmissionLength:0},{position:{x:1,y:5},transmissionLength:15})).to.equal(true);
         });
         //
-        it("should return an array with ids of antennas which represent the route   ", function () {
+        it("should return an array with ids of antennas which represent the route ,routep1top2  ", function () {
             var point1={
                 "x": 1,
                 "y": 0,
@@ -468,9 +467,149 @@ describe("antennas functions tests", function () {
             expect(tools.routep1top2(point1,point2,antennas,route)).to.deep.equal(["1","3","5"]);
             //routep1top2
         });
+//update or relief
+
+        it("should update point 2 properties, tryupdateorrelief", function () {
+            var point1={x:2,y:2,parent:"1",index:"1",id:1,d:10};
+            var point2={x:5,y:6,parent:"58",index:"8",parentindex:"5",id:1,d:150};
+            tools.tryupdateorrelief(point1,point2);
+            expect(point2).to.deep.equal({x:5,y:6,parent:1,index:"8",parentindex:"1",id:1,d:15});
+        });
+
+        it("should return the next minimum of the array,findnextminimumpoint", function () {
+            var graph=[
+                {
+                    "id": "1",
+                    "position": {
+                        "x": 100,
+                        "y": 0
+                    },
+                    "transmissionLength": 100,
+                    "d": 100,
+                    "parent": -1,
+                    "index": 0,
+                    "isvisited": false,
+                    "parentindex": 4
+                },
+                {
+                    "id": "2",
+                    "position": {
+                        "x": 0,
+                        "y": 100
+                    },
+                    "transmissionLength": 100,
+                    "d": 100,
+                    "parent": -1,
+                    "index": 1,
+                    "isvisited": false,
+                    "parentindex": 4
+                },
+                {
+                    "id": "3",
+                    "position": {
+                        "x": 50,
+                        "y": 50
+                    },
+                    "transmissionLength": 100,
+                    "d": 70.71067811865476,
+                    "parent": -1,
+                    "index": 2,
+                    "isvisited": false,
+                    "parentindex": 4
+                },
+                {
+                    "x": 100,
+                    "y": 100,
+                    "id": -2,
+                    "transmissionLength": 0,
+                    "d": 1.7976931348623157e+308,
+                    "parent": null,
+                    "index": 3,
+                    "isvisited": false,
+                    "parentindex": null
+                },
+                {
+                    "x": 0,
+                    "y": 0,
+                    "transmissionLength": 0,
+                    "parent": -1,
+                    "id": -1,
+                    "d": 0,
+                    "isvisited": true,
+                    "index": 4,
+                    "parentindex": 4
+                }
+            ];
+            expect(tools.findnextminimumpoint(graph).id).to.equal("3");
+        })
+
+        it("should return the route of a given antennas array,findroute", function () {
+            var antennas=[
+                {
+                    "id": "1",
+                    "position": {
+                        "x": 10,
+                        "y": 0
+                    },
+                    "transmissionLength": 11
+                },
+                {
+                    "id": "2",
+                    "position": {
+                        "x": 20,
+                        "y": 0
+                    },
+                    "transmissionLength": 11
+                },
+                {
+                    "id": "3",
+                    "position": {
+                        "x": 30,
+                        "y":0
+                    },
+                    "transmissionLength": 11
+                },
+                {
+                    "id": "4",
+                    "position": {
+                        "x": 40,
+                        "y": 0
+                    },
+                    "transmissionLength": 11
+                },
+                {
+                    "id": "5",
+                    "position": {
+                        "x": 50,
+                        "y": 0
+                    },
+                    "transmissionLength": 11
+                },
+                {
+                    "id": "6",
+                    "position": {
+                        "x": 150,
+                        "y": 0
+                    },
+                    "transmissionLength": 150
+                }
+            ];
+            var route=[];
+            tools.findroute({x:1,y:0},{x:60,y:0},antennas,route);
+            expect(tools.getminroute()).to.deep.equal([
+                {
+                    "id": "6",
+                    "position": {
+                        "x": 150,
+                        "y": 0
+                    },
+                    "transmissionLength": 150
+                }
+            ]);
+        })
     });
     describe("negative", function () {
-        it("should fail when the values are negative", function () {
+        it("should fail when the values are negative,distance", function () {
 
             try {
                 tools.distance({x: 0, y: 0}, {x: 4, y: -53});
@@ -516,7 +655,7 @@ describe("antennas functions tests", function () {
 
 
 
-        it("should return an empty array if there are no neighbour antennas of a specific point", function () {
+        it("should return an empty array if there are no neighbour antennas of a specific point,validantennasinrange", function () {
             var antennas = [
                 {
                     "id": "1",
@@ -571,19 +710,98 @@ describe("antennas functions tests", function () {
             expect(array.length).to.equal(0);
         });
 
-        it("should return false if the given points are not neighbours", function () {
+        it("should return false if the given points are not neighbours,isneighbour", function () {
             expect(tools.isneighbour({x:1,y:1,transmissionLength:0},{position:{x:1,y:5},transmissionLength:1})).to.equal(false);
         });
 
-    });
-    describe("phase 3", function () {
-        it("", function () {
+        it("should return error for bad input,tryupdateorrelief", function () {
+            var point1={x:2,y:2,parent:"1",index:"1",id:1,d:10};
+            var point2={x:-5,y:6,parent:"58",index:"8",parentindex:"5",id:1,d:150};
 
+            try {
+                tools.tryupdateorrelief(point1,point2);
+            }
+            catch (ex) {
+                expect(ex.message).to.contain("negative values");
+            }
         })
-    });
-    describe("phase 4", function () {
-        it("", function () {
 
+        it("should return the route of a given antennas array,findroute", function () {
+            var antennas=[];
+            var route=[];
+            tools.findroute({x:1,y:0},{x:60,y:0},antennas,route);
+            expect(tools.getminroute()).to.deep.equal([
+                {
+                    "id": "6",
+                    "position": {
+                        "x": 150,
+                        "y": 0
+                    },
+                    "transmissionLength": 150
+                }
+            ]);
+        })
+
+
+        // check phase 3
+        // it("should phase 3", function () {
+        //     tools.a(function () {
+        //         console.log("hehagdhadhadgdaga")
+        //     })
+        //     tools.phase3('antennatest.json',{x:1,y:2},{x:2,y:2},function(err){
+        //         expect(err.message).to.contain("no antennas in range");
+        //     })
+        // })
+
+
+//error cases for all phases
+        it("should return error message no antennas in range", function () {
+            tools.phase1('antennatest.json',{x:1,y:2},{x:2,y:2},function(err){
+                expect(err.message).to.contain("no antennas in range");
+            })
+        })
+        it("should return error message no antennas in range", function () {
+            tools.phase2('antennatest.json',{x:1,y:2},{x:2,y:2},function(err){
+                expect(err.message).to.contain("no antennas in range");
+            })
+        })
+        it("should return error message no antennas in range", function () {
+            tools.phase3('antennatest.json',{x:1,y:2},{x:2,y:2},function(err){
+                expect(err.message).to.contain("no antennas in range");
+            })
+        })
+
+        it("should return error message no antennas in range", function () {
+            tools.phase4('antennatest.json',{x:1,y:2},{x:2,y:2},function(err){
+                    expect(err.message).to.contain("no antennas in range");
+            })
+        })
+
+
+
+        it("should return error message negative values", function () {
+            tools.phase1('antenna.json',{x:1,y:-2},{x:2,y:2},function(err){
+                expect(err.message).to.contain("negative values");
+            })
+        })
+        it("should return error message negative values", function () {
+            tools.phase2('antenna.json',{x:1,y:-2},{x:2,y:2},function(err){
+                expect(err.message).to.contain("negative values");
+            })
+        })
+        it("should return error message negative values", function () {
+            tools.phase3('antenna.json',{x:1,y:-2},{x:2,y:2},function(err){
+                expect(err.message).to.contain("negative values");
+            })
+        })
+        it("should return error message negative values", function () {
+            tools.phase4('antenna.json',{x:1,y:-2},{x:2,y:2},function(err){
+                expect(err.message).to.contain("negative values");
+            })
         })
     });
 });
+
+
+
+
