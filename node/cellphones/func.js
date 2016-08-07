@@ -34,11 +34,11 @@ function distance(dot1, dot2) {
     //TODO tr is not minus. if it is send error -check if the code can handle the error
 
 }
-function findclosestantenna(antennas, antenna1, antenna2, point1, point2) {
+function findclosestantenna(antennas, antenna1, antenna2, point1, point2, callback) {
     for (var i = 0; i < antennas.length; i++) {
         if (antennas[i].transmissionLength == undefined || antennas[i].transmissionLength == null) {
-            callback(new Error("no transmissionLength"));
-            return;
+            return new Error("no transmissionLength");
+            ;
         }
         antennas[i].distance1 = distance(antennas[i], point1);
         antennas[i].distance2 = distance(antennas[i], point2);
@@ -94,6 +94,7 @@ function phase1(filename, point1, point2, callback) {
     });
 }
 
+
 function phase2(filename, point1, point2, callback) {
     fs.readFile(__dirname + '/' + filename, function (err, result) {
         if (err) {
@@ -109,39 +110,19 @@ function phase2(filename, point1, point2, callback) {
             var antennas1 = [];
             //relevants antennas for cellphone 2
             var antennas2 = [];
-
+            var answer = null;
             try {
-                // findantennasforpoints(antennas,antennas1,antennas2,point1,point2);
-                for (var i = 0; i < antennas.length; i++) {
-                    if (antennas[i].transmissionLength == undefined || antennas[i].transmissionLength == null) {
-                        //if there is bad input
-                        callback(new Error("no transmissionLength"));
-                        return;
-                    }
-                    //distance 1 - distance from point 1
-                    antennas[i].distance1 = distance(antennas[i], point1);
-                    antennas[i].distance2 = distance(antennas[i], point2);
+                answer = findantennasforpoints(antennas, antennas1, antennas2, point1, point2);
 
-                    //*** add line about the checking if it is the same one
-
-                    //in case its the same antenna**
-                    if (antennas[i].distance1 <= antennas[i].transmissionLength && antennas[i].distance2 <= antennas[i].transmissionLength) {
-                        callback(null, [antennas[i].id]);
-                        return;
-                    }
-                    //enters only the relevants antennas for each cellphone
-                    if (antennas[i].distance1 <= antennas[i].transmissionLength) {
-                        antennas1.push(antennas[i]);
-                    }
-                    if (antennas[i].distance2 <= antennas[i].transmissionLength) {
-                        antennas2.push(antennas[i]);
-                    }
-                }
             }
             catch (ex) {
                 //callback(ex);
                 callback(new Error("bad input"));
 
+                return;
+            }
+            if (answer != null) {
+                callback(null, answer);
                 return;
             }
             if (antennas2.length == 0 || antennas1.length == 0) {
@@ -150,25 +131,64 @@ function phase2(filename, point1, point2, callback) {
                 callback(error);
                 return;
             }
-            else {
-                for (var i = 0; i < antennas1.length; i++) {
-                    for (var j = 0; j < antennas2.length; j++) {
-//not the same antenna and the sum of transmissionLengths is bigger than the distance between them
-                        if (antennas1[i].id != antennas2[j].id && antennas1[i].transmissionLength + antennas2[j].transmissionLength >= distance(antennas1[i], antennas2[j])) {
-                            callback(null, [antennas1[i].id, antennas2[j].id]);
-                            return;
-                        }
-                    }
-                }
-//nothing found
-                var error = new Error("no antennas in range");
+
+            try {
+                answer = find2antennasinrange(antennas1, antennas2);
+            }
+            catch (ex) {
                 callback(error);
+                return
+            }
+            if (answer.message !== undefined) {
+                callback(answer);
+                return;
+            }
+            else if (answer != null) {
+                callback(null, answer);
                 return;
             }
         }
     });
 }
 
+function find2antennasinrange(antennas1, antennas2) {
+    for (var i = 0; i < antennas1.length; i++) {
+        for (var j = 0; j < antennas2.length; j++) {
+//not the same antenna and the sum of transmissionLengths is bigger than the distance between them
+            if (antennas1[i].id != antennas2[j].id && antennas1[i].transmissionLength + antennas2[j].transmissionLength >= distance(antennas1[i], antennas2[j])) {
+                return [antennas1[i].id, antennas2[j].id];
+            }
+        }
+    }
+    return new Error("no antennas in range");
+}
+
+function findantennasforpoints(antennas, antennas1, antennas2, point1, point2) {
+    for (var i = 0; i < antennas.length; i++) {
+        if (antennas[i].transmissionLength == undefined || antennas[i].transmissionLength == null) {
+            //if there is bad input
+            //       callback(new Error("no transmissionLength"));
+            throw new Error("no transmissionLength");
+        }
+        //distance 1 - distance from point 1
+        antennas[i].distance1 = distance(antennas[i], point1);
+        antennas[i].distance2 = distance(antennas[i], point2);
+        //*** add line about the checking if it is the same one
+
+        //in case its the same antenna**
+        if (antennas[i].distance1 <= antennas[i].transmissionLength && antennas[i].distance2 <= antennas[i].transmissionLength) {
+            //callback(null, [antennas[i].id]);
+            return [antennas[i].id];
+        }
+        //enters only the relevants antennas for each cellphone
+        if (antennas[i].distance1 <= antennas[i].transmissionLength) {
+            antennas1.push(antennas[i]);
+        }
+        if (antennas[i].distance2 <= antennas[i].transmissionLength) {
+            antennas2.push(antennas[i]);
+        }
+    }
+}
 //minimum route
 
 var minroute = [];
@@ -419,20 +439,6 @@ function dijekstra(point, pointsingraph) {
     }
 }
 
-
-function routep1top22(startpoint, endpoint, pointsingraph, route) {
-    while (endpoint != startpoint || endpoint.parentindex != endpoint.index) {
-        if (route.length == 0) {
-            // if (pointsingraph[endpoint.parentindex]!= undefined) {
-            route = [pointsingraph[endpoint.parentindex].id];
-        } else {
-            route.push(pointsingraph[endpoint.parentindex].id);
-        }
-        endpoint = pointsingraph[endpoint.parentindex];
-    }
-    return route;
-}
-
 function routep1top2(startpoint, endpoint, pointsingraph, route) {
     if (endpoint == startpoint || endpoint.parentindex == endpoint.index || endpoint.parent == -1 || endpoint.parent == null) {
         return route;
@@ -449,28 +455,29 @@ function getminroute() {
     return minroute;
 }
 
-function a(func){
-    findroute=func;
+function switchfunc(func) {
+    findroute = func;
+    //funcname=func;
 }
 
-module.exports.a=a;
+module.exports.switchfunc = switchfunc;
 module.exports.phase1 = phase1;
 module.exports.phase2 = phase2;
 module.exports.phase3 = phase3;
 module.exports.phase4 = phase4;
-module.exports.distance=distance;
-module.exports.findclosestantenna=findclosestantenna;
-module.exports.copyarray=copyarray;
+module.exports.distance = distance;
+module.exports.findclosestantenna = findclosestantenna;
+module.exports.copyarray = copyarray;
 module.exports.findroute = findroute;
-module.exports.validantennasinrange= validantennasinrange;
-module.exports.phase4initializepoint= phase4initializepoint;
-module.exports.isneighbour= isneighbour;
-module.exports.tryupdateorrelief=tryupdateorrelief;
-module.exports.findnextminimumpoint= findnextminimumpoint;
-module.exports.dijekstra= dijekstra;
+module.exports.validantennasinrange = validantennasinrange;
+module.exports.phase4initializepoint = phase4initializepoint;
+module.exports.isneighbour = isneighbour;
+module.exports.tryupdateorrelief = tryupdateorrelief;
+module.exports.findnextminimumpoint = findnextminimumpoint;
+module.exports.dijekstra = dijekstra;
 module.exports.routep1top2 = routep1top2;
-module.exports.getminroute=getminroute;
-module.exports.minroute=minroute;
-module.exports.isstarted=isstarted;
-
-
+module.exports.getminroute = getminroute;
+module.exports.minroute = minroute;
+module.exports.isstarted = isstarted;
+module.exports.find2antennasinrange=find2antennasinrange;
+module.exports.findantennasforpoints=findantennasforpoints;

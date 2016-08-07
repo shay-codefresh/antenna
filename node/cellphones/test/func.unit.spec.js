@@ -12,6 +12,20 @@ var tools = require('../func');
 
 describe("antennas functions tests", function () {
     describe("positive", function () {
+//checkit
+        it("should return an array of one id", function () {
+            tools.phase1('antenna.json',{x:1,y:2},{x:2,y:2},function(err,res){
+                expect(res).to.contain(["1"]);
+            })
+        });
+
+
+        it("should return error message no antennas in range, 2 antennas in range", function () {
+            var res=tools.find2antennasinrange([{id:"1",position:{x:1,y:2},transmissionLength:1}],[{id:"2",position:{x:1,y:2},transmissionLength:1}]);
+            expect(res).to.deep.equal(["1","2"]);
+        });
+
+
         it("should return the distance of 2 points,distance", function () {
             expect(tools.distance({x: 1, y: 0}, {x: 2, y: 0})).to.equal(1);
             expect(tools.distance({x: 1, y: 2}, {x: 0, y: 2})).to.equal(1);
@@ -199,6 +213,15 @@ describe("antennas functions tests", function () {
                 expect(array1[i]).to.equal(array2[i]);
             }
         });
+
+        it("should return a copy of a given array,copyarray", function () {
+            // var array1=[1,5,7,8,9,33,85,77];
+            var array1 = [];
+            var array2 = tools.copyarray(array1);
+            for (var i = 0; i < array1.length; i++) {
+                expect(array1[i]).to.equal(array2[i]);
+            }
+        });
         it("should give the neighbour antennas of a specific point,validantennasinrange", function () {
             var antennas = [
                 {
@@ -337,7 +360,7 @@ describe("antennas functions tests", function () {
         it("should return true if the given points are neighbours,isneighbour", function () {
             expect(tools.isneighbour({x:1,y:1,transmissionLength:0},{position:{x:1,y:5},transmissionLength:15})).to.equal(true);
         });
-        //
+//check it good
         it("should return an array with ids of antennas which represent the route ,routep1top2  ", function () {
             var point1={
                 "x": 1,
@@ -742,40 +765,67 @@ describe("antennas functions tests", function () {
             ]);
         })
 
+        it("in case of no transmission length should an error,findclosestantenna", function () {
 
-        // check phase 3
-        // it("should phase 3", function () {
-        //     tools.a(function () {
-        //         console.log("hehagdhadhadgdaga")
-        //     })
-        //     tools.phase3('antennatest.json',{x:1,y:2},{x:2,y:2},function(err){
-        //         expect(err.message).to.contain("no antennas in range");
-        //     })
-        // })
 
+            expect(tools.findclosestantenna([{
+                "id": "6",
+                "position": {
+                    "x": 150,
+                    "y": 0
+                }}],[],[],{x:5,y:6},{x:3,y:8}).message).to.equal("no transmissionLength");
+        })
+
+
+        it("should return error message no antennas in range", function () {
+           tools.switchfunc(function () {
+               return error("no antennas in range");
+           })
+            tools.phase3('antenna.json',{x:1,y:2},{x:2,y:2},function(err){
+                expect(err.message).to.contain("no antennas in range");
+            })
+        })
+
+        it("should return error message no antennas in range", function () {
+            tools.switchfunc(function () {
+                return error("no antennas in range");
+            })
+            tools.phase4('antennaempty.json',{x:1,y:6},{x:2,y:5},function(err){
+                expect(err.message).to.contain("no antennas in range");
+            })
+        })
+
+
+
+
+
+        it("should return error message no antennas in range, 2 antennas in range", function () {
+            var err=tools.find2antennasinrange([{position:{x:1,y:2},transmissionLength:1}],[{position:{x:9,y:2},transmissionLength:1}]);
+                expect(err.message).to.contain("no antennas in range");
+        });
 
 //error cases for all phases
         it("should return error message no antennas in range", function () {
             tools.phase1('antennatest.json',{x:1,y:2},{x:2,y:2},function(err){
                 expect(err.message).to.contain("no antennas in range");
             })
-        })
+        });
         it("should return error message no antennas in range", function () {
             tools.phase2('antennatest.json',{x:1,y:2},{x:2,y:2},function(err){
                 expect(err.message).to.contain("no antennas in range");
             })
-        })
+        });
         it("should return error message no antennas in range", function () {
             tools.phase3('antennatest.json',{x:1,y:2},{x:2,y:2},function(err){
                 expect(err.message).to.contain("no antennas in range");
             })
-        })
+        });
 
         it("should return error message no antennas in range", function () {
             tools.phase4('antennatest.json',{x:1,y:2},{x:2,y:2},function(err){
                     expect(err.message).to.contain("no antennas in range");
             })
-        })
+        });
 
 
 
