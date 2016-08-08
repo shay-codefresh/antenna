@@ -9,7 +9,7 @@ steps:
     tag: develop
 
   unit-test-step:
-    image: codefresh/buildpacks:all-5
+    image: shay/antenna
 
     working-directory: ./test
     commands:
