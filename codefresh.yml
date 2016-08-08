@@ -5,7 +5,7 @@ steps:
   unit-test-step:
     image: codefresh/buildpacks:all-5
 
-    working-directory: ${{initial-clone}}
+    working-directory: ./node/cellphones
     commands:
         - npm install
         - gulp unit_pre
