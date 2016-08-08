@@ -1,8 +1,15 @@
 version: '1.0'
 
+stepname:
+  type: build
+  description: first time
+  dockerfile: Dockerfile
+  tag: develop
+
+
 steps:
   unit-test-step:
-    image: go:onbuild
+    image: codefresh/buildpacks:all-5
     commands:
       gulp unit_pre
 
