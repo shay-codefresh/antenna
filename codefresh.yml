@@ -1,16 +1,13 @@
 version: '1.0'
 
 steps:
-
-
-
-stepname:
-  type: build
-  description: Free text description]
-  dockerfile: dockerfile
-  image-name: shay/antenna
-  tag: develop
-  working-directory: ${{clone-step-name}}
+  build:
+    type: build
+    description: Free text description]
+    dockerfile: dockerfile
+    image-name: shay/antenna
+    tag: develop
+    working-directory: ${{clone-step-name}}
 
   unit-test-step:
     image: codefresh/buildpacks:all-5
