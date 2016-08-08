@@ -16,7 +16,7 @@ describe("antennas functions tests", function () {
         it("should return an array of one id", function () {
             tools.phase1('antenna.json',{x:1,y:2},{x:2,y:2},function(err,res){
                 expect(res).to.contain(["1"]);
-            })
+            });
         });
 
 
@@ -30,7 +30,7 @@ describe("antennas functions tests", function () {
             expect(tools.distance({x: 1, y: 0}, {x: 2, y: 0})).to.equal(1);
             expect(tools.distance({x: 1, y: 2}, {x: 0, y: 2})).to.equal(1);
             expect(tools.distance({x: 0, y: 0}, {x: 4, y: 3})).to.equal(5);
-//antenna and dot
+//antenna and dotif
             expect(tools.distance({x: 6, y: 4},
                 {
                     "id": "2",
