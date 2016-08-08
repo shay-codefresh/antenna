@@ -11,7 +11,7 @@ steps:
   unit-test-step:
     image: codefresh/buildpacks:all-5
 
-    working-directory: ${{initial-clone}}
+    working-directory: ./test
     commands:
         - gulp unit_pre
 
