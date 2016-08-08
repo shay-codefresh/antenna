@@ -13,6 +13,5 @@ steps:
 
     working-directory: ${{initial-clone}}
     commands:
-        - npm install
         - gulp unit_pre
 
