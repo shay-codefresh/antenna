@@ -9,9 +9,9 @@ steps:
     tag: develop
 
   unit-test-step:
-    image: shay/antenna
+    image: codefresh/buildpacks:all-5
 
-    working-directory: ./test
+    working-directory: ${{build}}
     commands:
         - gulp unit_pre
 
