@@ -4,7 +4,7 @@ steps:
   build:
     type: build
     description: Free text description]
-    dockerfile: dockerfile
+    dockerfile: Dockerfile
     image-name: shay/antenna
     tag: develop
 
