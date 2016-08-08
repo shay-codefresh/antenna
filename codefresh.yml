@@ -1,15 +1,14 @@
 version: '1.0'
 
-stepname:
-  type: build
-  description: first time
-  dockerfile: Dockerfile
-  tag: develop
-
-
 steps:
   unit-test-step:
     image: codefresh/buildpacks:all-5
+
+    working-directory: ${{initial-clone}}
     commands:
-      gulp unit_pre
+        - npm install
+        - gulp unit_pre
+
+  build-step:
+    type: build
 
