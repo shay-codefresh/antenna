@@ -5,4 +5,5 @@ WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
 RUN npm install --silent
-COPY ./node /usr/src/app
+#COPY ./node/cellphones /usr/src/app
+COPY . /usr/src/app
