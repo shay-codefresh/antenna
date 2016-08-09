@@ -9,4 +9,11 @@ steps:
     commands:
         - npm install
         - gulp unit_pre
+  build-step:
+    type: build
+    image-name: shaycf/antenna
 
+  push to registry:
+    type: push
+    candidate: ${{build-step}}
+    tag: master
