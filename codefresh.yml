@@ -9,13 +9,13 @@ steps:
     commands:
         - npm install
         - gulp unit_pre
-  build-step:
-    type: build
-    image-name: your/image
   edit-step:
     working-directory: ${{initial-clone}}
     commands:
         -'your text ' > package.json
+  build-step:
+    type: build
+    image-name: itaitask/withyaml
 
   push to registry:
     type: push
