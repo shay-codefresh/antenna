@@ -4,12 +4,12 @@ steps:
 
   unit-test-step:
     image: codefresh/buildpacks:all-5
-
     working-directory: ${{initial-clone}}
     commands:
         - npm install
         - gulp unit_pre
   edit-step:
+    image: codefresh/buildpacks:all-5
     working-directory: ${{initial-clone}}
     commands:
         -'your text ' > package.json
