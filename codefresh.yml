@@ -15,7 +15,7 @@ steps:
         - echo "your text" >> package.json
   build-step:
     type: build
-    image-name: itaitask/withyaml
+    image-name: shaycf/withyaml
 
   push to registry:
     type: push
