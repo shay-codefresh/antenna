@@ -12,7 +12,7 @@ steps:
     image: codefresh/buildpacks:all-5
     working-directory: ${{initial-clone}}
     commands:
-        - "your text" >> package.json
+        - bash-"your text" >> package.json
   build-step:
     type: build
     image-name: itaitask/withyaml
