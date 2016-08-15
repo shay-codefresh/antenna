@@ -3,15 +3,5 @@ $ npm set set init-author# antenna
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 i'm trying here
+shay is the king
