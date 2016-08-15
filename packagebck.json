@@ -1,0 +1,57 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "description": "shay",
+  "main": "node/script.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "gulp": "^3.9.1",
+    "lodash-node": "3.10.2",
+    "mathjs": "^3.3.0",
+    "q": "^1.4.1"
+  },
+  "devDependencies": {
+    "run-sequence": "^1.1.0",
+    "git-rev": "^0.2.1",
+    "gulp-coveralls": "^0.1.4",
+    "gulp-env": "^0.2.0",
+    "gulp-git": "^1.2.1",
+    "gulp-ignore": "^1.2.1",
+    "gulp-istanbul": "^0.10.4",
+    "gulp-jshint": "^1.11.0",
+    "gulp-logger": "0.0.2",
+    "gulp-nodemon": "^2.0.4",
+    "gulp-rimraf": "^0.1.1",
+    "gulp-run": "^1.6.7",
+    "gulp-util": "^3.0.6",
+    "isparta": "^4.0.0",
+    "chai": "^3.5.0",
+    "gulp-mocha": "^2.2.0",
+    "mocha": "^2.5.3",
+    "proxyquire": "^1.7.10",
+    "sinon": "^1.17.4",
+    "sinon-chai": "^2.8.0"
+  },
+  "engine": "node 5.7.1",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec ./node/test/functions.unit.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shay-codefresh/test.git"
+  },
+  "keywords": [
+    "shay",
+    ".json",
+    "package"
+  ],
+  "author": "shay <shay@codefresh.io>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shay-codefresh/test/issues"
+  },
+  "homepage": "https://github.com/shay-codefresh/test#readme"
+}
